@@ -1,0 +1,246 @@
+<!-- BEGIN CONTENT -->
+<section class="page-content-wrapper hidden" id="section-stockOrder">
+    <div class="page-head">
+        <div class="page-title">
+            <div class="caption">
+                <span>出入库管理</span>
+            </div>
+        </div>
+        <div class="page-actions">
+            <button type="button" class="btn btn-primary" href="#stockOrder" data-toggle="modal" @click="addStockOut">
+                添加出库单
+            </button>
+            <button type="button" class="btn btn-warning" href="#stockOrder" data-toggle="modal"  @click="addStockIn">
+                添加入库单
+            </button>
+        </div>
+    </div>
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <!-- BEGIN PAGE BASE CONTENT -->
+        <div class="portlet light bordered vmui-portlet">
+            <!--<div class="portlet-title">-->
+                <!--<div class="caption">-->
+                    <!--<span class="caption-subject font-dark sbold uppercase">出入库管理</span>-->
+                <!--</div>-->
+                <!--<div class="actions">-->
+                    <!--<button type="button" class="btn btn-primary" data-toggle="modal" href="#stockOrder" @click="addStockOut">-->
+                        <!--添加出库单-->
+                    <!--</button>-->
+                    <!--<button type="button" class="btn btn-warning" data-toggle="modal" href="#stockOrder" @click="addStockIn">-->
+                        <!--添加入库单-->
+                    <!--</button>-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="portlet-body">
+                <div class="tabbable-line">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" @click="stockAllTab">全部</a></li>
+                        <li><a data-toggle="tab" @click="stockInTab">入库记录</a></li>
+                        <li><a data-toggle="tab" @click="stockOutTab">出库记录</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active">
+                            <div class="search-bar-quick clearfix" id="accurateSearch">
+                                <div class="form-group">
+                                    <label class="control-label">时间</label>
+                                    <div class="td-date-container">
+                                        <div class="input-group input-daterange">
+                                            <picker ref="start_time" :date="params.start_time" @refresh="pageLoader()"></picker>
+                                            <!--<input type="text" picker="stockOrder" class="form-control form_datetime" name="start_time" v-model="params.start_time">-->
+                                            <span class="input-group-addon">至</span>
+                                            <picker ref="end_time" :date="params.end_time" @refresh="pageLoader()"></picker>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">商品</label>
+                                    <input type="text" class="form-control input-medium" v-model="params.goods" placeholder="按商品名称或商品编号搜索">
+                                </div>
+                                <div class="form-actions">
+                                    <label class="control-label">
+                                        <button type="button" class="btn btn-primary" @click="pageLoader()">
+                                            查询
+                                        </button>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="table-scrollable table-scrollable-borderless table-hasPadding2">
+                                <table class="table table-light table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>店面</th>
+                                        <th>时间</th>
+                                        <th>类型</th>
+                                        <th>备注</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <template v-for="stock in stockOrderList">
+                                        <tr @click="showDetails(stock)">
+                                            <td>
+                                                {{params.storeName}}
+                                            </td>
+                                            <td>
+                                                {{stock.stock_time}}
+                                            </td>
+                                            <td>
+                                                <span class="font-green" v-if="stock.type==1">入库</span>
+                                                <span class="font-red" v-if="stock.type==2">出库</span>
+                                            </td>
+                                            <td>
+                                                {{stock.remark}}
+                                            </td>
+                                        </tr>
+                                        <tr :id="'detail-'+stock.id" class="hideCell hidden">
+                                            <td colspan="4" class="hideCell-row">
+                                                <table class="table table-light table-child">
+                                                    <tbody>
+                                                    <tr v-for="detail in stock.details">
+                                                        <td>
+                                                            <div>{{detail.itemId_label}}</div>
+                                                            <div class="font-grey-silver font-sm">{{detail.itemCode}}</div>
+                                                        </td>
+                                                        <td>数量：{{detail.requestCount}}</td>
+                                                        <!--<td>-->
+                                                            <!--<span class="font-blue bold">成功</span>-->
+                                                            <!--<span class="font-red bold">失败</span>-->
+                                                        <!--</td>-->
+                                                        <td>
+                                                            状态：{{detail.resultMsg}}
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    </tbody>
+                                </table>
+                                <!--<div class="more-wrapper text-center" >-->
+                                <!--<div  class="data-null" v-if="TotalCount==RecordCount" >-->
+                                <!--<p class="text-center">无更多数据</p>-->
+                                <!--</div>-->
+                                <!--<div class="loading_more" v-else>-->
+                                <!--<button type="button" @click="loadMore()" class="btn default btn-outline">加载更多</button>-->
+                                <!--</div>-->
+                                <!--<div class="number_datas" >已显示 <b>{{RecordCount}}</b> 条/共 <b>{{TotalCount}}</b> 条</div>-->
+                                <!--</div>-->
+                            </div>
+                            <page ref="pageInit" :page="pageConfig" @loader="pageLoader()"></page>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END PAGE BASE CONTENT -->
+    </div>
+    <!-- END CONTENT BODY -->
+    <!-- END CONTENT -->
+
+    <!-- BEGIN 添加出入库单 -->
+    <div class="modal fade bs-modal-lg modal-scroll" tabindex="-1" role="dialog" aria-hidden="true" id="stockOrder">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">{{stockOrder.title}}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-3">描述</label>
+                            <div class="col-md-7"><input type="text" class="form-control" placeholder="描述" v-model="stockOrder.remark" required></div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-7">
+                                <div class="select_tag" >
+                                    <div class="checkbox-label" v-for="label in labelList">
+                                        <label>
+                                            <input type="checkbox" class="checkbox-invisible" :value="label" v-model="checkboxLabelList" @click="addLabel">
+                                            <span>{{label.label}}</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-3 control-label">商品</label>
+                            <div class="col-md-6">
+                                <a href="#goodModal" data-toggle="modal" class="btn btn-primary" @click="openGoodList">选择商品
+                                    <i class="fa fa fa-plus"></i></a>
+                                <div class="goods_box-editable clearfix" v-for="detail in stockOrder.details ">
+                                    <dl class="goods-data pull-left">
+                                        <dt><img :src="detail.PICTURE_" class="img_goods_sm"></dt>
+                                        <dd>
+                                            <div>{{detail.NAME_}}</div>
+                                            <div class="font-grey-silver font-sm">{{detail.CODE_}}</div>
+                                        </dd>
+                                    </dl>
+                                    <div class="pull-right">
+                                        <label class="control-label">数量：</label>
+                                        <input type="text" class="form-control input-xsmall" v-model="detail.requestCount">
+                                    </div>
+                                    <div class="floatDelete" @click="delDetailsItem(detail)"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" @click="submitStockOrder(stockOrder)">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--END 添加入库单 -->
+    <!-- BEGIN 选择商品 modal -->
+    <div class="modal fade bs-modal-lg modal-scroll" id="goodModal" tabindex="-1" role="dialog" aria-hidden="true" >
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true"></button>
+                    <h4 class="modal-title">添加商品</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="search-bar-accurate clearfix" >
+                        <div class="form-group">
+                            <label class="control-label">商品</label>
+                            <input type="text" class="form-control input-medium" placeholder="输入商品名称或者商品编号" v-model="params.good_condi" @keyup="searchGoodList">
+                        </div>
+                    </div>
+                    <div class="table-scrollable table-scrollable-borderless scrollable-y">
+                        <table class="table table-hover table-light passageTable">
+                            <tbody>
+                            <tr v-for="good in goodList">
+                                <td>
+                                    <dl class="goods-data">
+                                        <dt><img :src="good.PICTURE_" class="img_goods_sm"></dt>
+                                        <dd><div>{{good.NAME_}}</div><div class="font-grey-silver font-sm">{{good.CODE_}}</div></dd>
+                                    </dl>
+                                </td>
+                                <td>
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        <input type="checkbox" :value="good" v-model="checkboxGoodList"/>
+                                        <span></span>
+                                    </label>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" @click="submitStockList" >提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END 选择商品 modal -->
+</section>
+
+

@@ -1,0 +1,167 @@
+<!-- BEGIN CONTENT -->
+<section class="page-content-wrapper hidden"  id="section-stockManage" v-cloak>
+    <div class="page-head">
+        <div class="page-title">
+            <div class="caption">
+                <span>库存查询</span>
+            </div>
+        </div>
+    </div>
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <!-- BEGIN PAGE BASE CONTENT -->
+        <div class="portlet light bordered vmui-portlet">
+            <div class="portlet-body">
+                <div class="tabbable-line">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" @click="changeTab('all')">全部</a></li>
+                        <li><a data-toggle="tab" @click="changeTab('warn')">预警</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active">
+                            <div class="search-bar-quick clearfix" id="accurateSearch">
+                                <div class="form-group">
+                                    <label class="control-label">商品</label>
+                                    <input type="text" class="form-control input-medium" v-model="params.cond"  @keyup.enter="searchGood" placeholder="按商品名称或商品编号搜索">
+                                </div>
+                                <div class="form-actions">
+                                    <label class="control-label">
+                                        <button type="submit" class="btn btn-primary" @click="searchGood">
+                                            查询
+                                        </button>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="table-scrollable table-scrollable-borderless table-hasPadding2" >
+                                <table class="table table-hover table-light">
+                                    <thead>
+                                    <tr>
+                                        <th>商品</th>
+                                        <th>商城库存</th>
+                                        <th>格子柜库存</th>
+                                        <th>货架库存</th>
+                                        <th>售货机库存</th>
+                                        <th>智能柜库存</th>
+                                        <th>总库存</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody >
+                                    <tr v-for="Stock in stockList">
+                                        <td>
+                                            <dl class="goods-data">
+                                                <dt><img :src="Stock.picture" class="img_goods_sm"></dt>
+                                                <dd><div>{{Stock.name}}</div><div class="font-grey-silver font-sm">{{Stock.code}}</div></dd>
+                                            </dl>
+                                        </td>
+                                        <td><span class="bold" v-if="Stock.shopCount>0" >{{Stock.shopCount}}</span></td>
+                                        <td>
+                                            <span class="bold" v-if="Stock.deviceGridCount>0" >{{Stock.deviceGridCount}}</span>
+                                            <span class="bold font-red" v-if="Stock.deviceGridShortCount>0" >/{{Stock.deviceGridShortCount}}</span>
+                                        </td>
+                                        <td>
+                                            <span class="bold" v-if="Stock.deviceShelfCount>0" >{{Stock.deviceShelfCount}}</span>
+                                            <!--<span class="bold font-red" v-if="Stock.deviceShelfShortCount>0" >/{{Stock.deviceShelfShortCount}}</span>-->
+                                        </td>
+                                        <td>
+                                            <span class="bold" v-if="Stock.deviceBoxCount>0" >{{Stock.deviceBoxCount}}</span>
+                                           <!-- <span class="bold font-red" v-if="Stock.deviceBoxShortCount>0" >/{{Stock.deviceBoxShortCount}}</span>-->
+                                        </td>
+                                        <td>
+                                            <span class="bold" v-if="Stock.deviceStarCount>0" >{{Stock.deviceStarCount}}</span>
+                                           <!-- <span class="bold font-red" v-if="Stock.deviceStarShortCount>0" >/{{Stock.deviceStarShortCount}}</span>-->
+                                        </td>
+                                        <td>
+                                            <!--<span class="bold font-blue" v-if="Stock.stockCount> 5" >{{Stock.stockCount}}</span>-->
+                                            <span class="bold " >{{Stock.stockCount}}</span>
+                                        </td>
+                                        <td><a href="#" class="btn btn-link" @click="showShortDetial(Stock)">详情</a> </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END PAGE BASE CONTENT -->
+    </div>
+    <!-- END CONTENT BODY -->
+    <!--缺货详情 -->
+    <div class="modal fade bs-modal-lg modal-scroll" tabindex="-1" role="dialog" aria-hidden="true"  id="ShortDetial">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">
+                        <span>{{goodInfo.name_}}</span><span class="font-grey-silver font-sm">{{goodInfo.code_}}</span>
+                    </h4>
+                </div>
+                <div class="modal-body ">
+                    <div class="tabbable-line">
+                        <ul class="nav nav-tabs">
+                            <li id="ShortDetiallHeader" @click="showShortDetiall"><a data-toggle="tab" >缺货详情</a></li>
+                            <li id="DeviceStockHeader" class="active" @click="showDeviceStock"><a data-toggle="tab">设备库存</a></li>
+
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="DeviceStock">
+                                <div class="table-scrollable table-scrollable-borderless scrollable-y" >
+                                    <table class="table table-hover table-light" >
+                                        <thead>
+                                        <tr>
+                                            <th>设备</th>
+                                            <th>货道</th>
+                                            <th>库存</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr v-for="device in DeviceInfo" >
+                                            <td>
+                                                <div>{{device.COUNTER_NAME_}}</div>
+                                                <div class="font-grey-silver font-sm">{{device.COUNTER_DEVICE_CODE_}}</div>
+                                            </td>
+                                            <td v-if="device.COUNTER_DEVICE_TYPE_=='shelf'">{{device.FLOOR_NUM_}}层</td>
+                                            <td v-else>{{device.PLACE_NUM_}}号货道</td>
+                                            <td><div class="font-red">{{device.COUNT_}}</div></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="ShortDetiall" >
+                                <div class="table-scrollable table-scrollable-borderless" >
+                                    <table class="table table-hover table-light">
+                                        <thead>
+                                        <tr>
+                                            <th>设备</th>
+                                            <th>货道</th>
+                                            <th>缺货量</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr v-for="device in DeviceInfo">
+                                            <td>
+                                                <div>{{device.COUNTER_NAME_}}</div>
+                                                <div class="font-grey-silver font-sm">{{device.COUNTER_DEVICE_CODE_}}</div>
+                                            </td>
+                                            <td v-if="device.COUNTER_DEVICE_TYPE_=='shelf'">{{device.FLOOR_NUM_}}层</td>
+                                            <td v-else>{{device.PLACE_NUM_}}号货道</td>
+                                            <td><div class="font-red">{{device.SHORT_COUNT_}}</div></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    <!--End: 缺货详情 -->
+</section>
+
+<!-- END CONTENT -->

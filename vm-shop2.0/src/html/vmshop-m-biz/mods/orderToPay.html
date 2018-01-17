@@ -1,0 +1,106 @@
+<section id="section-orderToPay" class="hidden">
+    <div class="page-header main-gradient" id="" >
+        <a href="#" class="header-actions header-actions-left" @click="returnHomepage"><span class="ico ico-back"></span></a>
+        <div class="title">支付</div>
+    </div>
+    <div class="page-content payment-content">
+        <div class="weui-block">
+            <!--<div class="weui-block__tips">为了您的商品及时送达，请准确填写房间号。</div>-->
+            <div class="roomnumber-block clearfix">
+                <div class="roomnumber-label">您的位置：</div>
+                <div class="roomnumber-box">{{paymentData.NAME_}}</div>
+            </div>
+        </div>
+        <div class="weui-cells payment-cells">
+            <div class="weui-cell" v-for="paymentDetail in paymentDetailList">
+                <div class="weui-cell__hd"><img :src="paymentDetail.PICTURE_" alt="" class="goods-img"></div>
+                <div class="weui-cell__bd">
+                    <div class="clearfix">
+                        <div class="fl">
+                            <div class="product-title">{{paymentDetail.GOODS_NAME_}}</div>
+                            <div class="product-label default" v-if="paymentDetail.DELIVERY_TYPE_ == '1'">魔格自取</div>
+                            <div class="product-label warning" v-if="paymentDetail.DELIVERY_TYPE_ == '2'">前台送货</div>
+                        </div>
+                        <div class="fr">
+                            <div class="product-price">￥<span>{{paymentDetail.GOODS_PRICE_}}</span></div>
+                            <div class="calculate">×{{paymentDetail.COUNT_}}=￥{{paymentDetail.GOODS_PRICE_LABEL}}</div>
+                        </div>
+                    </div>
+                    <div class="incident-text" v-if="paymentDetail.DELIVERY_TYPE_ == '1'">魔格自取商品购买成功后，售卖机柜门会自动打开，请及时取货。</div>
+                    <div class="incident-text" v-if="paymentDetail.DELIVERY_TYPE_ == '2'">前台送货商品购买成功后，将有专人送货上门，请耐心等待！</div>
+                </div>
+            </div>
+            <!--<div class="weui-cell">-->
+            <!--<div class="weui-cell__hd"><img src="img/pic/timg.jpg" alt="" class="goods-img"></div>-->
+            <!--<div class="weui-cell__bd">-->
+            <!--<div class="clearfix">-->
+            <!--<div class="fl">-->
+            <!--<div class="product-title">塑料一次性打火机1只</div>-->
+            <!--<div class="product-label warning">魔格自取</div>-->
+            <!--</div>-->
+            <!--<div class="fr">-->
+            <!--<div class="product-price">￥<span>2.00</span></div>-->
+            <!--<div class="calculate">×1=￥35.00</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
+        </div>
+        <!--<div class="orderprice-count">-->
+        <!--商品总价: <span class="total-price">￥ 0.01</span>-->
+        <!--</div>-->
+        <div class="payment-select">
+            <div class="weui-cells weui-cells_checkbox">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <i class="ico-weixinpay" v-if="getChannel()==1"></i>
+                        <i class="ico-alipay" v-if="getChannel()==2"></i>
+                        <span class="payment-title" v-if="getChannel()==2">支付宝支付</span>
+                        <span class="payment-title" v-if="getChannel()==1">微信支付</span>
+                    </div>
+
+                    <div class="weui-cell__ft">
+                        <label class="weui-check__label"  for="s12">
+                            <input type="checkbox" class="weui-check" name="checkbox1" id="s12" checked="checked">
+                            <i class="weui-icon-checked"></i>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-fixedbar">
+            <a href="#" class="to-buy" @click="pay">去支付</a>
+            <span class="bottom-textbox" v-if="getChannel()==2">
+            需支付宝支付：<span>￥<i>{{paymentData.totalMoney}}</i></span>
+            </span>
+            <span class="bottom-textbox" v-if="getChannel()==1">
+            需微信支付：<span>￥<i>{{paymentData.totalMoney}}</i></span>
+            </span>
+            <span class="bottom-textbox" v-if="getChannel()==0">
+            需支付：<span>￥<i>{{paymentData.totalMoney}}</i></span>
+            </span>
+        </div>
+    </div>
+    <div class="masklayer hidden" id="showOrderToPayMasklayer">
+        <div class="l-wrapper">
+        <svg viewBox="0 0 120 120" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <g id="circle" class="g-circles g-circles--v1">
+                <circle id="12" transform="translate(35, 16.698730) rotate(-30) translate(-35, -16.698730) " cx="35" cy="16.6987298" r="10"></circle>
+                <circle id="11" transform="translate(16.698730, 35) rotate(-60) translate(-16.698730, -35) " cx="16.6987298" cy="35" r="10"></circle>
+                <circle id="10" transform="translate(10, 60) rotate(-90) translate(-10, -60) " cx="10" cy="60" r="10"></circle>
+                <circle id="9" transform="translate(16.698730, 85) rotate(-120) translate(-16.698730, -85) " cx="16.6987298" cy="85" r="10"></circle>
+                <circle id="8" transform="translate(35, 103.301270) rotate(-150) translate(-35, -103.301270) " cx="35" cy="103.30127" r="10"></circle>
+                <circle id="7" cx="60" cy="110" r="10"></circle>
+                <circle id="6" transform="translate(85, 103.301270) rotate(-30) translate(-85, -103.301270) " cx="85" cy="103.30127" r="10"></circle>
+                <circle id="5" transform="translate(103.301270, 85) rotate(-60) translate(-103.301270, -85) " cx="103.30127" cy="85" r="10"></circle>
+                <circle id="4" transform="translate(110, 60) rotate(-90) translate(-110, -60) " cx="110" cy="60" r="10"></circle>
+                <circle id="3" transform="translate(103.301270, 35) rotate(-120) translate(-103.301270, -35) " cx="103.30127" cy="35" r="10"></circle>
+                <circle id="2" transform="translate(85, 16.698730) rotate(-150) translate(-85, -16.698730) " cx="85" cy="16.6987298" r="10"></circle>
+                <circle id="1" cx="60" cy="10" r="10"></circle>
+            </g>
+            <use xlink:href="#circle" class="use"/>
+        </svg>
+        </div>
+    </div>
+</section>

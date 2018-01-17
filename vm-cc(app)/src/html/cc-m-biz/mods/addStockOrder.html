@@ -1,0 +1,101 @@
+<section id="section-addStockOrder" class="hidden" v-cloak >
+    <div id="stockOrderView">
+        <div class="page-head bg-gradient">
+            <a @click="back" class="back"><span class="ico ico-back"></span></a>
+            <div class="title">添加出入库单</div>
+        </div>
+        <div class="page-content">
+            <div class="weui-tab head-tab ">
+                <div class="weui-navbar">
+                    <!--<a name="stockIn" class="weui-navbar__item weui-bar__item&#45;&#45;on" @click="stockInTab">-->
+                        <!--<span>入库单</span>-->
+                    <!--</a>-->
+                    <a name="stockOut" class="weui-navbar__item" @click="stockOutTab">
+                        <span>出库单</span>
+                    </a>
+                </div>
+                <div class="weui-tab__bd">
+                    <div class="weui-tab__bd-item weui-tab__bd-item--active">
+                        <div class="weui-cells__title">描述</div>
+                        <div class="weui-cells weui-cells_form">
+                            <div class="weui-cell">
+                                <div class="weui-cell__bd">
+                                    <textarea class="weui-textarea" placeholder="请输入出入库信息或者选择相关标签" rows="2" v-model="stockOrder.remark"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="select_tag">
+                            <div class="checkbox-label" v-for="label in labelList">
+                                <label>
+                                    <input type="checkbox" class="checkbox-invisible" :value="label" v-model="checkbox.labelList" @click="addLabel">
+                                    <span>{{label.label}}</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="weui-cells__title">商品</div>
+                        <div class="add-goods-btn">
+                            <i class="add-img" @click="addDetails"></i>
+                            <p>添加商品</p>
+                        </div>
+                        <template v-if="stockOrder.details">
+                            <div class="weui-cells__title">已选商品</div>
+                            <div class="weui-cells">
+                                <div class="weui-cell" v-for="detail in stockOrder.details" >
+                                    <div class="weui-cell__bd">
+                                        <p class="goods-title">{{detail.itemCode}}</p>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <div class="gw_num">
+                                            <em class="jian" @click="decCount(detail)">-</em>
+                                            <input type="text" value="1" class="num" v-model.number="detail.requestCount"/>
+                                            <em class="add" @click="addCount(detail)">+</em>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                        <div class="weui-cells__title"><button class="weui-btn weui-btn_primary" type="button" @click="submitStockOrder">提交</button></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="goodListView" class="hidden">
+        <div class="page-head bg-gradient">
+            <a @click="showStockOrder" class="back" href="#"><i class="ico-back"></i></a>
+            <div class="title">选择商品</div>
+        </div>
+        <div class="page-content">
+            <div class="search-bar clearfix">
+                <div class="search-box clearfix">
+                    <input type="text" placeholder="按商品名称或者商品编号搜索" v-model="params.search_good_condition" @keyup="searchGood">
+                    <a href="#" v-if="params.search_good_condition" class="clear-search" @click="cleanSearch"></a>
+                    <!--<button type="button" class="btn-search" @click="search">搜索</button>-->
+                </div>
+
+            </div>
+            <div class="weui-cells weui-cells_checkbox mt-0" >
+                <label class="weui-cell weui-check__label" v-for="good in goodList">
+                    <div class="weui-cell__hd">
+                        <div class="goods-img-box">
+                            <img :src="good.PICTURE_" class="goods-img">
+                        </div>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <div class="font-bold font-md">{{good.NAME_}}</div>
+                        <div class="font-grayer font-sm">{{good.CODE_}}</div>
+                    </div>
+                    <div class="weui-cell__hd">
+                        <input type="checkbox" class="weui-check" :value="good" v-model="checkbox.goodList">
+                        <i class="weui-icon-checked"></i>
+                    </div>
+                </label>
+            </div>
+            <div class="bottom-fixed-block clearfix">
+                <span class="btn-group"><button class="btn-flat-grey" type="button" @click="showStockOrder" >取消</button></span>
+                <span class="btn-group"><button class="btn-flat-blue" type="button" @click="selectGood">确定</button></span>
+            </div>
+        </div>
+    </div>
+</section>
+

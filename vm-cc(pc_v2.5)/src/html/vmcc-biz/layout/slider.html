@@ -1,0 +1,34 @@
+<div class="page-sidebar-wrapper">
+    <div class="page-sidebar navbar-collapse collapse" >
+        <ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200" id="slider" v-cloak>
+            <li v-for="menu in menuList" class="nav-item ">
+                <a  @click="toMod(menu.menu_href_)" class="nav-link nav-toggle">
+                    <i :class="menu.menu_icon_class_"></i>
+                    <span class="title">{{menu.menu_name_}}</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li v-for="son in menu.son_menu" class="nav-item">
+                        <a  @click="toMod(son.menu_href_)" class="nav-link ">
+                            <span class="title">{{son.menu_name_}}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!--<div class="aside">-->
+    <!--<div class="aside-wrapper">-->
+        <!--<ul class="aside-nav">-->
+            <!--<li class="aside-nav-item"><a class="aside-nav-main"><i class="icon-layers ico"></i><span class="pull-left">首页</span></a></li>-->
+            <!--<li class="aside-nav-item"><a class="aside-nav-main"><i class="icon-layers ico"></i><span>基础设置</span></a>-->
+                <!--<ul class="aside-nav-sub">-->
+                    <!--<li><a>门店设置</a></li>-->
+                    <!--<li><a>商品设置</a></li>-->
+                <!--</ul>-->
+            <!--</li>-->
+        <!--</ul>-->
+    <!--</div>-->
+<!--</div>-->

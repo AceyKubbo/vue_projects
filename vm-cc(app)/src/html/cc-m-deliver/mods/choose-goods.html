@@ -1,0 +1,55 @@
+<section id="section-ChooseGoods" class="hidden">
+<div id="select-unit" >
+    <div class="page-header">
+        <a href="#" class="header-actions header-actions-left"><span class="ico ico-back"></span></a>
+        <div class="title">选择商品</div>
+    </div>
+    <div class="page-content payment-content">
+        <div class="side-tab">
+            <div class="side-navbar">
+                <a id= "totalSort"class="side-navbar__item side-navbar__item--on" @click="switchSort" :value = '7||9||13||14'>
+                    <span>全部</span>
+                </a>
+                <a class="side-navbar__item" @click="switchSort" :value = '7'>
+                    <span>饮料</span>
+                </a>
+                <a class="side-navbar__item" @click="switchSort" :value = '9'>
+                    <span>零食</span>
+                </a>
+                <a class="side-navbar__item" @click="switchSort" :value = '13'>
+                    <span>计生用品</span>
+                </a>
+                <a class="side-navbar__item" @click="switchSort" :value = '14'>
+                    <span>其他</span>
+                </a>
+            </div>
+            <div class="side-tab__bd">
+                <div class="side-tab__bd-item side-tab__bd-item--active">
+                    <div class="weui-cells moge-cells mogenet-cells">
+                        <div class="weui-cell">
+                        <div class="weui-cell__hd"><img src="img/pic/timg.jpg" alt=""
+                                                        class="goods-img"></div>
+                        <div class="weui-cell__bd">
+                            <div class="product-title">塑料一次性打火机1只</div>
+                            <div class="product-price">￥<span>2.00</span></div>
+
+                        </div>
+                        <div class="weui-cell__ft">
+                           <button type="button" class="btn-operate">选择</button>
+                        </div>
+                    </div>
+
+                    </div>
+                    <div class="weui-loadmore">
+                        <i class="weui-loading"></i>
+                        <span class="weui-loadmore__tips">正在加载</span>
+                    </div>
+                    <div class="weui-loadmore weui-loadmore_line">
+                        <span class="weui-loadmore__tips">暂无数据</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>

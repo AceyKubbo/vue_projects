@@ -1,0 +1,129 @@
+<!-- BEGIN CONTENT -->
+<section class="page-content-wrapper hidden" id="section-qrcodeManage">
+    <div class="page-head">
+        <div class="page-title">
+            <div class="caption">
+                <span>购物码管理</span>
+            </div>
+        </div>
+        <div class="page-actions">
+            <button type="button" class="btn btn-primary" data-toggle="modal" @click="addQrCode">添加购物码</button>
+        </div>
+    </div>
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <!-- BEGIN PAGE BASE CONTENT -->
+        <div class="portlet light bordered vmui-portlet">
+            <!--<div class="portlet-title">-->
+                <!--<div class="caption">-->
+                    <!--<span class="caption-subject font-dark sbold uppercase">购物码管理</span>-->
+                <!--</div>-->
+                <!--<div class="actions">-->
+                    <!--<button type="button" class="btn btn-primary" data-toggle="modal" @click="addQrCode">添加购物码</button>-->
+                    <!--&lt;!&ndash;<button type="button" class="btn dark" data-toggle="modal">导出cxcel</button>&ndash;&gt;-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="portlet-body">
+                <div class="table-scrollable table-scrollable-borderless">
+                    <table class="table table-light">
+                        <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>名称</th>
+                            <!--  <th>类型</th>-->
+                            <th width="40%">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="qrCode in qrCodeList">
+                            <td >
+                                {{qrCode.QR_CODE_}}
+                            </td>
+                            <td >
+                                {{qrCode.QR_NAME_}}
+                            </td>
+                            <!-- <td >
+                                 {{qrCode.COUNTER_TYPE_}}
+                             </td>-->
+                            <td>
+                                <!--<button type="button" class="btn btn-primary btn-circle btn-sm" v-if="qrCode.ID_ != ''">修改</button>-->
+                                <!--<button @click='deleteQrCode(qrCode)' type="button" class="btn red-mint btn-circle  btn-sm" v-if="qrCode.ID_ != ''">删除</button>-->
+                                <button @click='editQrCode(qrCode)' type="button" class="btn btn-primary btn-circle  btn-xs" v-if="qrCode.ID_ != ''">修改</button>
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <!-- END PAGE BASE CONTENT -->
+    </div>
+    <!-- END CONTENT BODY -->
+
+    <!--添加购物码-->
+    <div class="modal fade bs-modal-sm modal-scroll" tabindex="-1" role="dialog" aria-hidden="true" id="addQrCodeId">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">添加购物码</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="#" novalidate="novalidate"  class="form-vertical">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label class="control-label">编号</label>
+                                <input type="text" placeholder="" class="form-control" name="name" v-model="qrCodeDetail.QR_CODE_">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">名称</label>
+                                <input type="text" placeholder="" class="form-control" name="name" v-model="qrCodeDetail.QR_NAME_">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" data-toggle="confirmation" data-original-title="确定要添加吗？"
+                            @click="submitAddQrCode">确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--编辑购物码-->
+    <div class="modal fade bs-modal-sm  modal-scroll" tabindex="-1" role="dialog" aria-hidden="true" id="editQrCodeId">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">修改购物码</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="#" novalidate="novalidate"  class="form-vertical">
+                        <div class="form-body">
+                            <div class="form-group">
+                            <label class="control-label">编号</label>
+                            <input type="text" placeholder="" class="form-control" name="name" v-model="editQrCodeDetail.QR_CODE_">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">名称</label>
+                                <input type="text" placeholder="" class="form-control" name="name" v-model="editQrCodeDetail.QR_NAME_">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" data-toggle="confirmation" data-original-title="确定要添加吗？"
+                            @click="submitEditQrCode(editQrCodeDetail)">确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- END CONTENT -->

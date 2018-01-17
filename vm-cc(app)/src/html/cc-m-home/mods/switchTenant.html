@@ -1,0 +1,48 @@
+<section id="section-tenant" v-cloak>
+    <div class="page-header bg-gradient">
+        <div class="logo"><img src="img/cc-m-biz/moge-logo.png" class="logo-img">
+            <!--<h1>酒店无人零售智能终端</h1>-->
+        </div>
+    </div>
+    <div class="page-content">
+        <div class="weui-search-bar" id="searchBar">
+            <form class="weui-search-bar__form">
+                <div class="weui-search-bar__box">
+                    <i class="weui-icon-search"></i>
+                    <input type="search" class="weui-search-bar__input" id="searchInput" placeholder="搜索" v-model="params.tenantName" required="" @keyup="searchTenant">
+                    <a href="javascript:" class="weui-icon-clear" id="searchClear"></a>
+                </div>
+                <label class="weui-search-bar__label" id="searchText">
+                    <i class="weui-icon-search"></i>
+                    <span>搜索</span>
+                </label>
+            </form>
+            <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel">取消</a>
+        </div>
+        <div v-if="tenantList&&tenantList.length>0" class="weui-cells vmcc-ui-cells">
+            <a v-for="tenant in tenantList" class="weui-cell weui-cell_access"  @click="switchTenant(tenant)">
+                <div class="weui-cell__bd">
+                    <p>{{tenant.tenantName}}</p>
+                </div>
+                <div class="weui-cell__ft">
+                </div>
+            </a>
+            <!--<a class="weui-cell weui-cell_access" href="javascript:;">-->
+                <!--<div class="weui-cell__bd">-->
+                    <!--<p>杭州金通科技有限公司</p>-->
+                <!--</div>-->
+                <!--<div class="weui-cell__ft">-->
+                <!--</div>-->
+            <!--</a>-->
+        </div>
+        <div v-else-if="tenantList&&tenantList.length==0" class="noDatas">
+            <img src="img/cc-m-biz/no.png">
+            <p class="h1">暂未开通账号！</p>
+            <p class="h2">请联系魔格客服，电话18072782756</p>
+        </div>
+        <div v-else class="weui-loadmore">
+            <i class="weui-loading"></i>
+            <span class="weui-loadmore__tips">正在加载</span>
+        </div>
+    </div>
+</section>

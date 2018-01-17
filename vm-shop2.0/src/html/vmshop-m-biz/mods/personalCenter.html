@@ -1,0 +1,53 @@
+<section id="section-personalCenter" class="hidden">
+    <div class="personal-head">
+        <div class="arc-bg">
+            <div class="personal-head-body">
+                <div class="title">我的</div>
+                <div class="userInfo">
+                    <img :src="userInfo.userPicture" class="avatar">
+                    <p>{{userInfo.userName}}</p>
+                </div>
+            </div>
+
+        </div>
+        <div class="intro">
+          <span class="overlay">
+              <svg version="1.1" id="circle" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                 viewBox="0 0 500 250" enable-background="new 0 0 500 250" xml:space="preserve" PreserveAspectRatio="none">
+              <path fill="#FFFFFF" d="M250,246.5c-97.85,0-186.344-40.044-250-104.633V250h500V141.867C436.344,206.456,347.85,246.5,250,246.5z"/>
+              </svg>
+          </span>
+        </div>
+    </div>
+    <div class="weui-block">
+        <div class="weui-cells">
+            <div class="weui-cell" @click="jumpOrder">
+                <div class="weui-cell__bd">
+                    <div class="personNav-cell">
+                        <i class="ico-consumeRecord"></i>
+                        <span>消费记录</span>
+                    </div>
+                </div>
+                <div class="weui-cell__ft">
+                    <i class="ico-next"></i>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="weui-tabbar">
+        <a class="weui-tabbar__item" @click="returnHomepage">
+            <div class="weui-tabbar__icon">
+                <img src="img/ico-home.png">
+            </div>
+            <p class="weui-tabbar__label">首页</p>
+        </a>
+        <a class="weui-tabbar__item weui-bar__item--on">
+            <div class="weui-tabbar__icon">
+                <img src="img/ico-person-current.png">
+            </div>
+            <p class="weui-tabbar__label">我的</p>
+        </a>
+    </div>
+</section>

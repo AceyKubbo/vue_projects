@@ -1,0 +1,15 @@
+{
+  "name": "cc-m",
+  "version": "2.6.4",
+  "description": "云控平台手机版,name[工程项目名],version[工程版本号],devDependencies[工程脚手架工具]",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-cssmin": "^2.1.0",
+    "grunt-contrib-less": "^1.4.1",
+    "grunt-contrib-requirejs": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-html-build": "^0.7.1"
+  }
+}

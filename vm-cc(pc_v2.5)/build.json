@@ -1,0 +1,7 @@
+{
+    "desc":"mode[dev/pro] defaultTask[static-build-deploy/javascript-build-deploy] deployDir[web服务部署路径] version[源码编译版本号]templateName[biz,login,global,platform]",
+    "deployDir": "C:/test/vmui/cc_pc",
+    "defaultTask":"js-build-deploy",
+    "templateName":"platform",
+    "mode" : "pro"
+}

@@ -1,0 +1,109 @@
+<!-- BEGIN CONTENT -->
+<section class="page-content-wrapper hidden" id="section-supplierManage">
+    <div class="page-head">
+        <div class="page-title">
+            <div class="caption">
+                <span>供应商管理</span>
+            </div>
+        </div>
+        <div class="page-actions">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSupplierManageId" @click="addSupplier">添加供应商</button>
+        </div>
+    </div>
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <!-- BEGIN PAGE BASE CONTENT -->
+        <div class="portlet light bordered vmui-portlet">
+            <!--<div class="portlet-title" >-->
+                <!--<div class="caption">-->
+                    <!--<span class="caption-subject font-dark sbold uppercase">供应商管理</span>-->
+                <!--</div>-->
+                <!--<div class="actions">-->
+                    <!--<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addSupplierManageId" @click="addSupplier">添加供应商</button>-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="portlet-body">
+                <div class="search-bar-quick clearfix">
+                    <div class="form-group">
+                        <label class="control-label">供应商</label>
+                        <input  type="text" class="form-control input-medium" placeholder="按供应商名称或编号搜索" v-model="params.searchCondition" @keyup.enter="searchSupplier">
+                    </div>
+                    <div class="form-actions">
+                        <label class="control-label"><button type="submit" class="btn btn-primary" @click="searchSupplier">查询</button></label>
+                    </div>
+                </div>
+
+                <!--供应商列表-->
+                <div class="table-scrollable table-scrollable-borderless table-hasPadding2">
+                    <table class="table table-hover table-light">
+                        <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>
+                                供应商名称
+                            </th>
+                            <th>供应商描述</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="supplier in supplierList">
+                            <td>{{supplier.supplierCode}}</td>
+                            <td>{{supplier.supplierName}}</td>
+                            <td>{{supplier.supplierDesc}}</td>
+                            <td>
+                                <button class="btn btn-primary btn-xs btn-circle" @click="modifySupplierList(supplier)">修改</button>
+                                <!--<button class="btn btn-danger btn-xs btn-circle" @click="deleteSupplier(supplier)">删除</button>-->
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <page ref="pageInit" :page="pageConfig" @loader="pageLoader()"></page>
+            </div>
+        </div>
+    </div>
+    <!-- END PAGE BASE CONTENT -->
+    <!-- END CONTENT BODY -->
+    <!--添加供应商弹窗 -->
+    <div class="modal fade bs-modal-lg modal-scroll" tabindex="-1" role="dialog" aria-hidden="true" id="addSupplierManageId">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">添加供应商</h4>
+                </div>
+                <div class="modal-body ">
+                    <form action="#" class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">供应商编号<span class="required" aria-required="true">*</span></label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="请输入供应商编号" v-model="supplierDetail.supplierCode">
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">供应商名称<span class="required" aria-required="true">*</span></label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="请输入供应商名称" v-model="supplierDetail.supplierName">
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">描述</label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="请输入供应商的描述" v-model="supplierDetail.supplierDesc">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn grey-salsa btn-outline">取消</button>
+                    <button type="button" class="btn btn-primary" @click="submitSupplier(supplierDetail)">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End: 添加供应商弹窗 -->
+</section>
+<!-- END CONTENT -->

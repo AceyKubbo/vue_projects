@@ -1,0 +1,173 @@
+<!-- BEGIN CONTENT -->
+<section class="page-content-wrapper hidden" id="section-storeHouse">
+    <div class="page-head">
+        <div class="page-title">
+            <div class="caption">
+                <span>仓库管理</span>
+            </div>
+        </div>
+        <div class="page-actions">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addStockId" @click="addStock">创建仓库</button>
+        </div>
+    </div>
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <!-- BEGIN PAGE BASE CONTENT -->
+        <div class="portlet light bordered vmui-portlet">
+            <!--<div class="portlet-title">-->
+            <!--<div class="caption">-->
+            <!--<span class="caption-subject font-dark sbold uppercase">仓库管理</span>-->
+            <!--</div>-->
+            <!--<div class="actions">-->
+            <!--<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addStockId" @click="addStock">创建仓库</button>-->
+            <!--</div>-->
+            <!--</div>-->
+            <div class="portlet-body">
+                <div class="search-bar-quick clearfix">
+                    <div class="form-group">
+                        <label class="control-label">仓库</label>
+                        <input type="text" class="form-control input-medium" placeholder="按仓库名称或者编号搜索" v-model="params.searchCondition" @keyup.enter="searchStock">
+                    </div>
+                    <div class="form-actions">
+                        <label class="control-label">
+                            <button type="submit" class="btn btn-primary" @click="searchStock">查询</button>
+                        </label>
+                    </div>
+                </div>
+                <div class="table-scrollable table-scrollable-borderless table-hasPadding2">
+                    <table class="table table-light table-hover">
+                        <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>仓库名称</th>
+                            <th>描述</th>
+                            <th>操作</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <template>
+                            <tr v-for="stock in stockList">
+                                <td>{{stock.code}}</td>
+                                <td>{{stock.name}}</td>
+                                <td>{{stock.remark}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-xs btn-circle btn-primary" @click="modifyStockList(stock)" v-if="stock.bizType == 'platform'">编辑</button>
+                                    <!--<button type="button" class="btn btn-xs btn-circle btn-success">启用</button>-->
+                                    <!--<button type="button" class="btn btn-xs btn-circle btn-warning">禁用</button>-->
+                                    <!--<button type="button" class="btn btn-xs btn-circle btn-warning">出库</button>-->
+                                </td>
+                                <!--<td>-->
+                                <!--<button type="button" class="btn btn-xs btn-link">查看库存详情</button>-->
+                                <!--</td>-->
+                            </tr>
+                        </template>
+                        </tbody>
+                    </table>
+                </div>
+                <page ref="pageInit" :page="pageConfig" @loader="pageLoader()"></page>
+            </div>
+        </div>
+        <!-- END PAGE BASE CONTENT -->
+    </div>
+    <!-- END CONTENT BODY -->
+    <!-- END CONTENT -->
+
+    <!-- BEGIN 创建库存 -->
+    <div class="modal fade bs-modal-lg modal-scroll" tabindex="-1" role="dialog" aria-hidden="true" id="addStockId">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">创建仓库</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-3">编号</label>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" placeholder="编号" v-model="stockDetail.code" v-if ="stockDetail.id == null">
+                                <input type="text" class="form-control" placeholder="编号" v-model="stockDetail.code" v-if ="stockDetail.id != null" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-3">仓库名称</label>
+                            <div class="col-md-4"><input type="text" class="form-control" placeholder="仓库名称" v-model="stockDetail.name"></div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-3">描述</label>
+                            <div class="col-md-7"><input type="text" class="form-control" placeholder="描述" v-model="stockDetail.remark"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" @click="submitStock(stockDetail)">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--END 添加入库单 -->
+    <!-- BEGIN 仓库库存详情 modal -->
+    <div class="modal fade bs-modal-lg modal-scroll" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true"></button>
+                    <h4 class="modal-title">仓库库存</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="tabbable-line">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab">全部</a></li>
+                            <li><a data-toggle="tab">预警</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active">
+                                <div class="search-bar-quick clearfix">
+                                    <div class="form-group"><label class="control-label">商品</label> <input type="text"
+                                                                                                           placeholder="按商品名称或商品编号搜索"
+                                                                                                           class="form-control input-medium">
+                                    </div>
+                                    <div class="form-actions"><label class="control-label">
+                                        <button type="submit" class="btn btn-primary">
+                                            查询
+                                        </button>
+                                    </label></div>
+                                </div>
+                                <div class="table-scrollable table-scrollable-borderless">
+                                    <table class="table table-hover table-light">
+                                        <thead>
+                                        <tr>
+                                            <th>商品</th>
+                                            <th>库存</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                <dl class="goods-data">
+                                                    <dt><img src="" class="img_goods_sm"></dt>
+                                                    <dd>
+                                                        <div>加多宝金罐</div>
+                                                        <div class="font-grey-silver font-sm">10000009</div>
+                                                    </dd>
+                                                </dl>
+                                            </td>
+                                            <td><span class="bold">0</span></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END 选择商品 modal -->
+</section>
+
+

@@ -1,0 +1,380 @@
+<!-- BEGIN CONTENT -->
+<section class="page-content-wrapper hidden" id="section-equipmentMonitor" v-cloak>
+    <div class="page-head">
+        <div class="page-title">
+            <div class="caption">
+                <span>设备实时监控</span>
+            </div>
+        </div>
+        <div class="page-actions">
+            <a href="#" title="刷新" class="btn-refresh"></a>
+        </div>
+    </div>
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <!-- BEGIN PAGE BASE CONTENT -->
+        <div class="portlet light bordered vmui-portlet">
+
+            <div class="portlet-body">
+                <div class="row widget-row">
+                    <div class="col-md-3">
+                        <!-- BEGIN WIDGET THUMB -->
+                        <div class="widget-thumb widget-thumb-monitor widget-bg-color-white text-uppercase margin-bottom-20 bordered">
+                            <h4 class="widget-thumb-heading">设备状态</h4>
+                            <div class="widget-thumb-wrap">
+                                <i class="widget-thumb-icon bg-green icon-bulb"></i>
+                                <div class="widget-thumb-body">
+                                    <div class="widget-thumb-content">
+                                        <div class="widget-thumb-grid">
+                                            <div class="widget-thumb-grid-stat">{{monitorData.device_online}}</div>
+                                            <div class="widget-thumb-grid-subtitle">在线</div>
+                                        </div>
+                                        <!--<div class="widget-thumb-grid">-->
+                                        <!--<div class="widget-thumb-grid-stat">{{monitorData.device_offline}}</div>-->
+                                        <!--<div class="widget-thumb-grid-subtitle">异常</div>-->
+                                        <!--</div>-->
+                                        <div class="widget-thumb-grid">
+                                            <div class="widget-thumb-grid-stat">{{monitorData.device_offline}}</div>
+                                            <div class="widget-thumb-grid-subtitle">离线</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END WIDGET THUMB -->
+                    </div>
+                    <div class="col-md-3">
+                        <!-- BEGIN WIDGET THUMB -->
+                        <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 bordered">
+                            <h4 class="widget-thumb-heading">货道状态</h4>
+                            <div class="widget-thumb-wrap">
+                                <i class="widget-thumb-icon bg-red icon-layers"></i>
+                                <div class="widget-thumb-body">
+                                    <div class="widget-thumb-content">
+                                        <div class="widget-thumb-grid">
+                                            <div class="widget-thumb-grid-stat">{{monitorData.all_using_aisle}}</div>
+                                            <div class="widget-thumb-grid-subtitle">正常</div>
+                                        </div>
+                                        <div class="widget-thumb-grid">
+                                            <div class="widget-thumb-grid-stat">{{monitorData.all_using_short_aisle}}</div>
+                                            <div class="widget-thumb-grid-subtitle">缺货</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END WIDGET THUMB -->
+                    </div>
+                    <!--<div class="col-md-3">-->
+                    <!--&lt;!&ndash; BEGIN WIDGET THUMB &ndash;&gt;-->
+                    <!--<div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 bordered">-->
+                    <!--<h4 class="widget-thumb-heading">储量状态</h4>-->
+                    <!--<div class="widget-thumb-wrap">-->
+                    <!--<i class="widget-thumb-icon bg-purple fa fa-cubes"></i>-->
+                    <!--<div class="widget-thumb-body">-->
+                    <!--<div class="widget-thumb-content">-->
+                    <!--<div class="widget-thumb-grid">-->
+                    <!--<div class="widget-thumb-grid-stat">{{monitorData.}}</div>-->
+                    <!--<div class="widget-thumb-grid-subtitle">满货</div>-->
+                    <!--</div>-->
+                    <!--<div class="widget-thumb-grid">-->
+                    <!--<div class="widget-thumb-grid-stat">{{monitorData.}}</div>-->
+                    <!--<div class="widget-thumb-grid-subtitle">缺货</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--&lt;!&ndash; END WIDGET THUMB &ndash;&gt;-->
+                    <!--</div>-->
+                    <div class="col-md-3">
+                        <!-- BEGIN WIDGET THUMB -->
+                        <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 bordered">
+                            <h4 class="widget-thumb-heading">商品统计</h4>
+                            <div class="widget-thumb-wrap">
+                                <i class="widget-thumb-icon bg-blue icon-bar-chart"></i>
+                                <div class="widget-thumb-body">
+                                    <div class="widget-thumb-content">
+                                        <div class="widget-thumb-grid">
+                                            <div class="widget-thumb-grid-stat">{{monitorData.all_goods_count}}</div>
+                                            <div class="widget-thumb-grid-subtitle">在售</div>
+                                        </div>
+                                        <div class="widget-thumb-grid">
+                                            <div class="widget-thumb-grid-stat">{{monitorData.all_goods_short_count}}</div>
+                                            <div class="widget-thumb-grid-subtitle">补货</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END WIDGET THUMB -->
+                    </div>
+                </div>
+                <div class="tabbable-line">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#" data-toggle="tab" @click="change('all')">全部</a>
+                        </li>
+                        <li>
+                            <a href="#" data-toggle="tab" @click="change('normal')">满货</a>
+                        </li>
+                        <li>
+                            <a href="#" data-toggle="tab" @click="change('stop')">缺货</a>
+                        </li>
+                    </ul>
+                    <div class="search-bar-accurate clearfix">
+                        <!--<div class="form-group">-->
+                        <!--<label class="control-label">设备名称</label>-->
+                        <!--<input type="text" class="form-control input-medium" placeholder="search...">-->
+                        <!--</div>-->
+                        <div class="form-group">
+                            <label class="control-label">设备名称</label>
+                            <input type="text" v-model="params.DEVICE_NAME_" @keyup.enter="search" class="form-control input-medium" placeholder="输入设备名称">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">设备编号</label>
+                            <input type="text" v-model="params.ID_" @keyup="search" class="form-control input-medium" placeholder="输入设备编号">
+                        </div>
+                        <div class="form-actions">
+                            <label class="control-label">
+                                <button type="submit" @click="search" class="btn btn-primary">查询</button>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane active">
+                            <div class="table-scrollable table-scrollable-borderless">
+                                <table class="table table-hover table-light">
+                                    <thead>
+                                    <tr>
+                                        <th>设备名称</th>
+                                        <th>状态</th>
+                                        <th>缺货/全部</th>
+                                        <th>比例</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr v-for="equipment in equipmentList">
+                                        <td>
+                                            <div>{{equipment.DEVICE_NAME_}}</div>
+                                            <div>{{equipment.ID_}}</div>
+                                        </td>
+                                        <td>{{equipment.CONTECTED_LABEL}}
+                                            <img src="img/global/online.png" width="24" v-if="equipment.CONTECTED_ == '1'">
+                                            <img src="img/global/offline.png" width="24" v-if="equipment.CONTECTED_ == '0'">
+                                        </td>
+                                        <td>{{equipment.USING_AISLE_REALTIME_}}</td>
+                                        <td>{{equipment.aisleProportion}}</td>
+                                        <td>
+                                            <a class="btn btn-outline btn-circle blue btn-xs"
+                                               href="#realTimeInventory" data-toggle="modal" @click="realtimeInventory(equipment)">商品实时库存</a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="more-wrapper text-center" >
+                                    <div class="loading_more" v-if="TotalCount>0&&RecordCount<TotalCount">
+                                        <button type="button" @click="loadMore()" class="btn btn-white">加载更多</button>
+                                    </div>
+                                    <div v-else class="data-null">
+                                        <p class="text-center">无更多数据</p>
+                                    </div>
+                                    <div class="number_datas" >已显示 <b>{{RecordCount}}</b> 条/共 <b>{{TotalCount}}</b> 条</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade bs-modal-lg"
+             tabindex="-1" role="dialog"
+             aria-hidden="true" id="realTimeInventory">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-hidden="true"></button>
+                        <h4 class="modal-title">设备实时信息</h4>
+                    </div>
+                    <div class="modal-body scrollable-y">
+                        <div class="subpage-head">
+                            <div class="subTitle">设备：{{equipmentDetails.DEVICE_TYPE_LABEL}}[{{equipmentDetails.ID_}}]</div>
+                            <div class="row">
+                                <div class="col-lg-6 col-xs-12">
+                                    <div class="textList">
+                                        <ul class="clearfix">
+                                            <li class="textTitle">设备类型：</li>
+                                            <li>{{equipmentDetails.DEVICE_TYPE_LABEL}}</li>
+                                        </ul>
+                                        <ul class="clearfix">
+                                            <li class="textTitle">所属站点：</li>
+                                            <li>{{equipmentDetails.STATION_ID_}}
+                                            </li>
+                                        </ul>
+                                        <ul class="clearfix">
+                                            <li class="textTitle">
+                                                所属商户：
+                                            </li>
+                                            <li>{{equipmentDetails.TENANT_ID_LABEL}}</li>
+                                        </ul>
+                                        <!--<ul class="clearfix">-->
+                                        <!--<li class="textTitle">-->
+                                        <!--控制板程序版本：-->
+                                        <!--</li>-->
+                                        <!--<li></li>-->
+                                        <!--</ul>-->
+                                        <!--<ul class="clearfix">-->
+                                        <!--<li class="textTitle">-->
+                                        <!--工控板程序版本：-->
+                                        <!--</li>-->
+                                        <!--<li></li>-->
+                                        <!--</ul>-->
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-xs-12">
+                                    <div class="textList">
+                                        <ul class="clearfix">
+                                            <li class="textTitle">设备状态：</li>
+                                            <li>{{equipmentDetails.USE_STATUS_LABEL}}</li>
+                                        </ul>
+                                        <!--<ul class="clearfix">-->
+                                        <!--<li class="textTitle">控制板状态：</li>-->
+                                        <!--<li>正常/故障</li>-->
+                                        <!--</ul>-->
+                                        <!--<ul class="clearfix">-->
+                                        <!--<li class="textTitle">-->
+                                        <!--工程板状态：-->
+                                        <!--</li>-->
+                                        <!--<li></li>-->
+                                        <!--</ul>-->
+                                        <ul class="clearfix">
+                                            <li class="textTitle">
+                                                货道状态：
+                                            </li>
+                                            <li>{{equipmentDetails.AISLE_STATUS_LABEL}}</li>
+                                        </ul>
+                                        <!--<ul class="clearfix">-->
+                                        <!--<li class="textTitle">-->
+                                        <!--灯光状态：-->
+                                        <!--</li>-->
+                                        <!--<li></li>-->
+                                        <!--</ul>-->
+                                    </div>
+                                </div>
+                                <!--<div class="col-lg-6 col-xs-12">-->
+                                <!--<div class="textList">-->
+                                <!--<ul class="clearfix">-->
+                                <!--<li class="textTitle">-->
+                                <!--感应器状态：-->
+                                <!--</li>-->
+                                <!--<li></li>-->
+                                <!--</ul>-->
+                                <!--<ul class="clearfix">-->
+                                <!--<li class="textTitle">-->
+                                <!--纸币器状态：-->
+                                <!--</li>-->
+                                <!--<li></li>-->
+                                <!--</ul>-->
+                                <!--<ul class="clearfix">-->
+                                <!--<li class="textTitle">-->
+                                <!--纸币数量：-->
+                                <!--</li>-->
+                                <!--<li></li>-->
+                                <!--</ul>-->
+                                <!--<ul class="clearfix">-->
+                                <!--<li class="textTitle">-->
+                                <!--硬币器状态：-->
+                                <!--</li>-->
+                                <!--<li></li>-->
+                                <!--</ul>-->
+                                <!--<ul class="clearfix">-->
+                                <!--<li class="textTitle">-->
+                                <!--硬币数量：-->
+                                <!--</li>-->
+                                <!--<li></li>-->
+                                <!--</ul>-->
+                                <!--</div>-->
+                                <!--</div>-->
+                            </div>
+                        </div>
+                        <div class="tabbable-line">
+                            <ul class="nav nav-tabs">
+                                <li class="active">
+                                    <a href="#" data-toggle="tab" @click="aisleChange('all')">全部</a>
+                                </li>
+                                <li>
+                                    <a href="#" data-toggle="tab" @click="aisleChange('normal')">满货</a>
+                                </li>
+                                <li>
+                                    <a href="#" data-toggle="tab" @click="aisleChange('stop')">缺货</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active">
+                                    <div class="table-scrollable table-scrollable-borderless">
+                                        <table class="table table-hover table-light passageTable">
+                                            <thead>
+                                            <tr>
+                                                <th>货道编号</th>
+                                                <th>商品</th>
+                                                <th>容量</th>
+                                                <th>缺货量</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr v-for="passwayDetail in passwayDetailList">
+                                                <td>{{passwayDetail.AISLE_NUM_}}</td>
+                                                <td>
+                                                    <dl class="goods-data">
+                                                        <dt><img :src="passwayDetail.GOODS_PICTURE_" class="img_goods_sm"></dt>
+                                                        <dd><div>{{passwayDetail.GOODS_NAME_}}</div><div class="font-grey-silver font-sm">{{passwayDetail.GOODS_ID_}}</div></dd>
+                                                    </dl>
+                                                </td>
+                                                <td>{{passwayDetail.AISLE_STOCK_}}</td>
+                                                <td>{{passwayDetail.AISLE_SHORT_STOCK_}}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!--<div class="row">-->
+                                    <!--<div class="col-md-3 col-xs-6" v-for="passwayDetail in passwayDetailList">-->
+                                    <!--<div class="goods-grid">-->
+                                    <!--<div class="img_goods">-->
+                                    <!--<img :src="passwayDetail.GOODS_PICTURE_" class="img_goods_sm">-->
+                                    <!--<span v-if="passwayDetail.AISLE_STOCK_ == 0" class="soldOut-mask"></span>-->
+                                    <!--</div>-->
+
+                                    <!--<span class="title_goods">{{passwayDetail.GOODS_NAME_}}</span>-->
+                                    <!--<span class="number_goods">{{passwayDetail.GOODS_ID_}}</span>-->
+                                    <!--<span class="number_passway">货道编号：{{passwayDetail.AISLE_NUM_}}</span>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="col-md-3 col-xs-6">-->
+                                    <!--<div class="goods-grid">-->
+                                    <!--<div class="img_goods">-->
+                                    <!--<img src="http://itopvm.oss-cn-hangzhou.aliyuncs.com/goodsImg/pro/1001/">-->
+                                    <!--</div>-->
+
+                                    <!--<span class="title_goods">测试商品</span>-->
+                                    <!--<span class="number_goods">10010143</span>-->
+                                    <!--<span class="number_passway"> 货道编号：02</span>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- END PAGE BASE CONTENT -->
+    </div>
+    <!-- END CONTENT BODY -->
+</section>
+
+<!-- END CONTENT -->

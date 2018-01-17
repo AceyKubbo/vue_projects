@@ -1,0 +1,17 @@
+<div class="header" id="globalHeader" v-cloak>
+    <div class="pull-left" @click="returnBiz">
+      <a href="#" class="header-back" @click="returnBiz"><i class="ico-back"></i><span>返回</span></a>
+    </div>
+    <ul class="header-user pull-right">
+        <li class="dropdown dropdown-user">
+            <a href="javascript:;" data-toggle="dropdown"
+            data-hover="dropdown" data-close-others="true" class="dropdown-toggle"><span
+                class="username username-hide-on-mobile">{{userInfo.userName}}</span><i class=""></i>
+            </a>
+            <ul id="userDashBoardDropdown" class="dropdown-menu dropdown-menu-default">
+                <!--<li><a href="#" @click="returnMer"> <i class="icon-refresh"></i>返回商户版</a></li>-->
+                <li data-action="logout"><a href="#" @click="logout"><i class="icon-key"></i>退出登录</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,312 @@
+<!-- BEGIN CONTENT -->
+<section class="page-content-wrapper hidden" id="section-purchaseManage" v-cloak>
+    <div class="page-head">
+        <div class="page-title">
+            <div class="caption">
+                <span>采购管理</span>
+            </div>
+        </div>
+        <div class="page-actions">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addPurchaseId" @click="addPurchase">添加采购单</button>
+        </div>
+    </div>
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <!-- BEGIN PAGE BASE CONTENT -->
+        <div class="portlet light bordered vmui-portlet">
+            <!--<div class="portlet-title">-->
+            <!--<div class="caption">-->
+            <!--<span class="caption-subject font-dark sbold uppercase">采购管理</span>-->
+            <!--</div>-->
+            <!--<div class="actions">-->
+            <!--<button type="button" class="btn btn-primary" data-toggle="modal"-->
+            <!--data-target="#addPurchaseId" @click="addPurchase">添加采购单-->
+            <!--</button>-->
+            <!--</div>-->
+            <!--</div>-->
+            <div class="portlet-body">
+                <div class="search-bar-quick clearfix">
+                    <div class="form-group"><label class="control-label">采购时间</label>
+                        <div class="td-date-container">
+                            <div class="input-group input-daterange">
+                                <picker ref="start_time" :date="params.start_time" @refresh="pageLoader"></picker>
+                                <span class="input-group-addon">到</span>
+                                <picker ref="end_time" :date="params.end_time" @refresh="pageLoader"></picker>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">供应商</label>
+                        <input type="text" class="form-control input-medium" placeholder="按供应商名称"
+                               v-model="params.channelName" @keyup.enter="searchPurchase">
+                    </div>
+                    <div class="form-actions" @click="searchPurchase">
+                        <label class="control-label">
+                            <button type="submit" class="btn btn-primary">查询</button>
+                        </label>
+                    </div>
+                </div>
+
+                <!--采购记录列表-->
+                <div class="table-scrollable table-scrollable-borderless table-hasPadding2">
+                    <table class="table table-hover table-light">
+                        <thead>
+                        <tr>
+                            <th>供应商</th>
+                            <th>仓库</th>
+                            <th>
+                                采购人
+                            </th>
+                            <th>采购时间</th>
+                            <th>采购说明</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <template v-for="purchase in purchaseList">
+                            <tr @click="showDetail(purchase)">
+                                <td>
+                                    {{purchase.channelName}}
+                                </td>
+                                <td>{{purchase.stock_label}}</td>
+                                <td>{{purchase.purchaser}}</td>
+                                <td>{{purchase.createTime}}</td>
+                                <td>
+                                    {{purchase.remark}}
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-xs btn-circle btn-primary"
+                                            data-toggle="modal" data-target="#storageId"
+                                            @click="storageButton(purchase)" :id="'storageButton-'+purchase.id">入库
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="hideCell hidden" :id="purchase.id">
+                                <td colspan="6" class="hideCell-row">
+                                    <table class="table table-light table-hover table-child">
+                                        <tbody>
+                                        <tr v-for="detail in purchase.details">
+                                            <td>
+                                                <div>{{detail.itemName}}</div>
+                                                <div class="font-grey-silver font-sm">{{detail.itemCode}}</div>
+                                            </td>
+                                            <td>库存量：{{detail.quantity}}</td>
+                                            <td>已入库量：{{detail.storedCount}}</td>
+                                            <td>可入库量：{{detail.remainingCount}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </template>
+                        </tbody>
+                    </table>
+
+                </div>
+                <page ref="pageInit" :page="pageConfig" @loader="pageLoader()"></page>
+            </div>
+        </div>
+    </div>
+    <!-- END PAGE BASE CONTENT -->
+    <!-- END CONTENT BODY -->
+    <!--添加采购单弹窗 -->
+    <div class="modal fade bs-modal-lg modal-scroll" tabindex="-1" role="dialog" aria-hidden="true" id="addPurchaseId">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">添加采购单</h4>
+                </div>
+                <div class="modal-body ">
+                    <form action="#" class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group clearfix">
+                                <label class="col-md-2 control-label">仓库</label>
+                                <div class="col-md-4">
+                                    <input class="form-control" type="text" list="stockDataList" @change="selectStock"
+                                           v-model="purchaseDetail.STOCK_NAME_LABEL">
+                                    <datalist id="stockDataList">
+                                        <option v-for="op in stocks" :value="op.code">{{op.name}}</option>
+                                    </datalist>
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-2 control-label">供应商</label>
+                                <div class="col-md-4">
+                                    <input class="form-control" type="text" list="supplierdDatalist"
+                                           @change="selectSupplier" v-model="purchaseDetail.SUPPLIER_NAME_LABEL">
+                                    <datalist id="supplierdDatalist">
+                                        <option v-for="op in suppliers" :value="op.supplierCode">{{op.supplierName}}
+                                        </option>
+                                    </datalist>
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-2 control-label">采购人</label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="请输入采购人姓名"
+                                           v-model="purchaseDetail.purchaser">
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-2 control-label">采购说明</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" placeholder="请输入采购说明"
+                                           v-model="purchaseDetail.remark">
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-2 control-label">商品</label>
+                                <div class="col-md-8">
+                                    <a data-toggle="modal" class="btn btn-primary" @click="openGoodList">选择商品
+                                        <i class="fa fa fa-plus"></i></a>
+                                    <div class="goods_box-editable clearfix" v-for="detail in purchaseDetail.details">
+                                        <dl class="goods-data pull-left">
+                                            <dt><img :src="detail.PICTURE_" class="img_goods_sm"></dt>
+                                            <dd>
+                                                <div>商品名称:{{detail.NAME_}}</div>
+                                                <div class="font-grey-silver font-sm">商品编号:{{detail.CODE_}}</div>
+                                            </dd>
+                                        </dl>
+                                        <div class="pull-right">
+                                            <label class="control-label">数量：</label> <input type="text"
+                                                                                            class="form-control input-xsmall"
+                                                                                            v-model="detail.quantity">
+                                        </div>
+                                        <div class="pull-right" style="margin-right: 10px;">
+                                            <label class="control-label">单价：</label> <input type="text"
+                                                                                            class="form-control input-xsmall"
+                                                                                            v-model="detail.price">
+                                        </div>
+                                        <div class="floatDelete" @click="delDetailsItem(detail)"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn grey-salsa btn-outline">取消</button>
+                    <button type="button" class="btn btn-primary" @click="submitPurchase(purchaseDetail)">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End: 添加供应商弹窗 -->
+    <!-- BEGIN 选择商品 modal -->
+    <div class="modal fade bs-modal-lg modal-scroll" id="purchaseChooseGoodsId" tabindex="-1" role="dialog" aria-hidden="true" >
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true"></button>
+                    <h4 class="modal-title">添加商品</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="search-bar-accurate clearfix" >
+                        <div class="form-group">
+                            <label class="control-label">商品</label>
+                            <input type="text" class="form-control input-medium" placeholder="输入商品名称或者商品编号" v-model="params.good_condi" @keyup="searchGoodList">
+                        </div>
+                    </div>
+                    <div class="table-scrollable table-scrollable-borderless scrollable-y">
+                        <table class="table table-hover table-light passageTable">
+                            <tbody>
+                            <tr v-for="good in goodList">
+                                <td>
+                                    <dl class="goods-data">
+                                        <dt><img :src="good.PICTURE_" class="img_goods_sm"></dt>
+                                        <dd><div>{{good.NAME_}}</div><div class="font-grey-silver font-sm">{{good.CODE_}}</div></dd>
+                                    </dl>
+                                </td>
+                                <td>
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        <input type="checkbox" :value="good" v-model="checkboxGoodList"/>
+                                        <span></span>
+                                    </label>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" @click="submitGoodsList">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END 选择商品 modal -->
+
+    <!-- BEGIN 入库 -->
+    <div class="modal fade bs-modal-lg modal-scroll" tabindex="-1" role="dialog" aria-hidden="true" id="storageId">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header clearfix">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">采购单入库</h4>
+                </div>
+                <div class="modal-body ">
+                    <div class="editable-goodsNote scrollable-y">
+                        <div class="goodsNote">
+                            <div class="goodsNote-head clearfix">
+                                <div class="pull-left">
+                                    供应商：<span class="bold">{{storageDetail.channelName}}</span>
+                                </div>
+                                <div class="pull-right">仓库：<span class="bold">{{storageDetail.stock_label}}</span></div>
+                            </div>
+                            <div class="form-horizontal">
+                                <div class="form-group clearfix">
+                                    <div class="col-md-12"><textarea class="form-control" placeholder="入库说明"
+                                                                     v-model="storageDetail.remark"></textarea></div>
+                                </div>
+                            </div>
+                            <div class="goodsNote-body">
+                                <div class="goods_box-editable" v-for="detail in storageDetail.details">
+                                    <table class="opt-table">
+                                        <tbody>
+                                        <tr>
+                                            <td width="54%">
+                                                <dl class="goods-data">
+                                                    <dt><img :src="detail.itemPicture" class="img_goods_sm"></dt>
+                                                    <dd>
+                                                        <div>{{detail.itemName}}</div>
+                                                        <div class="font-grey-silver font-sm">{{detail.itemCode}}</div>
+                                                    </dd>
+                                                </dl>
+                                            </td>
+                                            <td width="18%">
+                                                <div>采购量：{{detail.quantity}}</div>
+                                                <div>已入库量：{{detail.storedCount}}</div>
+                                            </td>
+                                            <td width="18%">
+                                                <!--<div class="gw_num">-->
+                                                <!--<em class="reduce" @click="reduceQuantity(detail)">-</em>-->
+                                                <!--<input type="text" class="num" v-model="detail.storageQuantity"/>-->
+                                                <div class="pull-right" style="margin-right: 10px;" v-if="detail.remainingCount != '0'">
+                                                    <label class="control-label">入库量：</label><input type="text"
+                                                                                                    class="form-control input-xsmall"
+                                                                                                    v-model="detail.storageQuantity" @change="judgeCount(detail)">
+                                                </div>
+                                                <!--<em class="add" @click="addQuantity(detail)">+</em>-->
+                                                <!--</div>-->
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" @click="submitstorage">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--END 入库 -->
+</section>
+<!-- END CONTENT -->

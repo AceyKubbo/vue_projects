@@ -1,0 +1,143 @@
+<section id="section-salesRecord" class="hidden" v-cloak>
+    <div>
+        <div class="page-head bg-gradient">
+            <a @click="returnHome" class="back" href="#"><i class="ico-back"></i></a>
+            <div class="title">销售记录</div>
+            <div class="page-head-right">
+                <a href="#" id="openFilterBtn" class="head-right-btn" @click="openFilter">搜索</a>
+            </div>
+        </div>
+        <!--销售记录列表-->
+        <div class="page-content">
+            <div v-if="salesRecordList" class="order-cells">
+                <div class="order-cell" v-for="order in salesRecordList">
+                    <div class="order-cell-head">
+                        <div class="weui-cells mt-0">
+                            <div class="weui-cell">
+                                <div class="weui-cell__hd">
+                                    <img v-if="order.PAY_CHANNEL_=='wx_pub'" src="img/cc-m-biz/weixinpay.png"
+                                         class="payment-img">
+                                    <img v-if="order.PAY_CHANNEL_=='alipay_wap'" src="img/cc-m-biz/alipay.png"
+                                         class="payment-img">
+                                    <img v-if="order.PAY_CHANNEL_=='cash'" src="img/cc-m-biz/cash.png"
+                                         class="payment-img">
+                                </div>
+                                <div class="weui-cell__bd"><span class="font-md inline-block font-bold">{{order.ORDER_SUBJECT_}}</span>
+                                </div>
+                                <div class="weui-cell__ft">
+                                    <span class="font-black font-sm font-bold">{{order.PAY_STATUS_LABEL}}</span>
+                                <span class="switch">
+                                <i class="ico ico-turn-down"></i>
+                            </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="goods_purchased">
+                        <div class="weui-cells goods-cells_order">
+                            <div class="weui-cell" v-for="detail in order.details">
+                                <div class="weui-cell__hd">
+                                    <div class="goods-img-box">
+                                        <img :src="detail.PICTURE_" alt="" class="goods-img">
+                                    </div>
+                                </div>
+                                <div class="weui-cell__bd">
+                                    <div class="font-sm">{{detail.GOODS_NAME_}}</div>
+                                    <span class="label-blue">{{detail.DELIVERY_TYPE_LABEL}}</span>
+                                    <span v-if="detail.COUNTER_DEVICE_TYPE_=='shelf'" class="font-sm">[{{detail.COUNTER_NAME_}}]</span>
+                                    <span v-else class="font-xs">[{{detail.COUNTER_NAME_}} {{detail.GOODS_PLACE_NUM_}}货道]</span>
+                                </div>
+                                <div class="weui-cell__ft">
+                                    <div class="font-sm font-bold font-black">
+                                        ×{{detail.COUNT_}}=¥{{detail.GOODS_PRICE_LABEL}}
+                                    </div>
+                                    <div class="font-sm font-blue font-bold">{{detail.PICKUP_STATUS_LABEL}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-cell-foot">
+                        <div class="weui-cells mt-0">
+                            <div class="weui-cell">
+                                <div class="weui-cell__bd">
+                                    <div class="font-xs font-grayer">支付单号：{{order.ORDER_NO_}}</div>
+                                    <div class="font-xs font-gray">{{order.CREATE_TIME_}}</div>
+                                </div>
+                                <div class="weui-cell__ft">
+                                    <div class="font-sm font-black">合计：<span class="font-lg font-bold">¥{{order.PAY_AMOUNT_LABEL}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-else class="weui-loadmore" id="loadmoreScroll">
+                <i class="weui-loading"></i>
+                <span class="weui-loadmore__tips">正在加载</span>
+            </div>
+            <!--<div id="salesRecordBottom" class="weui-popup__container popup-bottom">-->
+            <!--<div class="weui-popup__overlay"></div>-->
+            <!--<div class="weui-popup__modal">-->
+            <!--<input type="text">-->
+            <!--</div>-->
+            <!--</div>-->
+        </div>
+    </div>
+    <!--筛选ActionSheet-->
+    <div id="searchFilter" class="weui-popup__container popup-bottom">
+        <div class="weui-popup__overlay"></div>
+        <div class="weui-popup__modal">
+            <div class="toolbar">
+                <div class="toolbar-inner">
+                    <a class="picker-button close-popup" @click="refreshSalesRecord">完成</a>
+                    <h1 class="title">筛选条件</h1><a class="reset-condition close-popup" @click="cleanFilter">清空</a>
+                </div>
+            </div>
+            <div class="modal-content">
+                <div class="screen-box">
+                    <div>交易状态</div>
+                    <div class="radio-label" v-for="item in radios.statusGroup">
+                        <label>
+                            <input type="radio" class="radio-invisible" name="salesState-rdo" :value="item.value" v-model="radios.status">
+                            <span>{{item.label}}</span>
+                            <i class="ico-Checked"></i>
+                        </label>
+                    </div>
+                </div>
+                <div class="screen-box">
+                    <div>支付方式</div>
+                    <div class="radio-label" v-for="item in radios.paywayGroup">
+                        <label>
+                            <input type="radio" class="radio-invisible" name="pay-rdo" :value="item.value" v-model="radios.payway">
+                            <span>{{item.label}}</span>
+                            <i class="ico-Checked"></i>
+                        </label>
+                    </div>
+                </div>
+                <div class="screen-box">
+                    <div>支付时间</div>
+                    <div class="weui-cells">
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+                                <div class="weui-input-box">
+                                    <input class="weui-input startTime" type="text" v-model="params.startTime" @onClose="changeSearchTime('startTime')">
+                                </div>
+                            </div>
+                            <div class="weui-cell__hd"><div class="weui-symbol">-</div></div>
+                            <div class="weui-cell__bd">
+                                <div class="weui-input-box">
+                                    <input class="weui-input endTime" type="text" v-model="params.endTime" >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="screen-box">
+                    <div class="weui-input-box">
+                    <input class="weui-input" placeholder="搜索订单号" v-model="params.orderNo"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

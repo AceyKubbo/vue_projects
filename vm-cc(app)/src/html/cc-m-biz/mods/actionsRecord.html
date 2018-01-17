@@ -1,0 +1,64 @@
+<section id="section-actionsRecord" class="hidden" v-cloak>
+    <div class="page-head bg-gradient">
+        <a @click="returnHome" class="back"><span class="ico ico-back"></span></a>
+        <div class="title">补换货记录</div>
+    </div>
+
+    <div class="page-content" id="actionsList">
+        <div class="weui-tab head-tab ">
+            <div class="weui-navbar">
+                <a name="replenishGoods" class="weui-navbar__item weui-bar__item--on" @click="replenishGoods" >
+                    <span>补货</span>
+                </a>
+                <a name="changeGoods" class="weui-navbar__item" @click="changeGoods">
+                    <span>换货</span>
+                </a>
+                <a name="batchSupply" class="weui-navbar__item" @click="batchSupply">
+                    <span>一键补货</span>
+                </a>
+            </div>
+            <div class="weui-tab__bd">
+                <div class="weui-tab__bd-item weui-tab__bd-item--active">
+                    <div v-if="actionsList" v-for="action in actionsList" class="order-cells">
+                        <div class="order-cell" >
+                            <div class="order-cell-head" @click="showDetails(action)">
+                                <div class="weui-cells mt-0">
+                                    <a class="weui-cell weui-cell_access">
+                                        <div class="weui-cell__bd">
+                                            <div class="font-md font-bold">{{action.counterName}}</div>
+                                            <div class="font-sm font-gray">{{action.deviceSN}}</div>
+                                        </div>
+                                        <div class="weui-cell__ft">
+                                            <div class="font-xs font-grayer">{{action.userId}}</div>
+                                            <div class="font-sm font-grayer">{{action.operTime}}</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="order-cell-content hidden" :id="'detail-'+action.id">
+                                <div class="weui-cells goods-cells_order mt-0">
+                                    <div class="weui-cell" v-for="detail in action.details">
+                                        <div class="weui-cell__bd">
+                                            <div class="font-sm font-bold">{{detail.goodsName}}
+                                                <span class="font-lg font-bold">×{{detail.count}}</span></div>
+                                            <div class="font-gray font-xs"><span>货道：{{detail.placeNum}}</span></div>
+                                        </div>
+                                        <div class="weui-cell__ft">
+                                            <span v-if="detail.result==2" class="font-blue font-bold font-sm">成功</span>
+                                            <span v-else class="font-red font-bold font-sm">初始化</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else class="weui-loadmore" >
+                        <i class="weui-loading"></i>
+                        <span class="weui-loadmore__tips">正在加载</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>

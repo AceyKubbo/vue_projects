@@ -1,0 +1,353 @@
+<!-- BEGIN CONTENT -->
+<section class="page-content-wrapper hidden" id="section-cupboardAdmin" v-cloak>
+    <div class="hasside-section">
+        <div class="page-head">
+            <div class="page-title">
+                <div class="caption">
+                    <span>货道设置</span>
+                </div>
+            </div>
+            <div class="page-actions">
+                <button type="button" class="btn btn-primary" href="#DeviceInfo" data-toggle="modal" @click="addDevice">添加柜台设备</button>
+            </div>
+        </div>
+        <!-- BEGIN CONTENT BODY -->
+        <div class="page-content">
+            <!-- Begin: life time stats -->
+            <div class="portlet light bordered vmui-portlet">
+                <div class="portlet-body">
+                    <div class="cupboard">
+                        <div class="cupboard-left">
+                            <div class="cupboard-box">
+                                <div class="tabbable-line">
+                                    <ul class="nav nav-tabs">
+                                        <li class="active"><a data-toggle="tab" @click="change('enable')">已启用({{deviceAmount.onlineAmount}})</a></li>
+                                        <li><a data-toggle="tab" @click="change('disable')">已停用({{deviceAmount.offlineAmount}})</a></li>
+                                    </ul>
+                                    <div class="side-search">
+                                        <div class="input-icon right">
+                                            <input type="text" v-model="params.search_counter_condition" @keyup="searchCounterByCondition" class="form-control input-circle" placeholder="输入设备编号(mid)/名称搜索" >
+                                            <i class="fa fa-search" @click="searchCounterByCondition"></i>
+                                        </div>
+                                    </div>
+                                    <div class="tab-content scrollable-y">
+                                        <div class="tab-pane active">
+                                            <div class="table-scrollable table-scrollable-borderless table-hasPadding2">
+                                                <table class="table table-hover table-light">
+                                                    <tbody>
+                                                    <tr v-for="counter in counterList" @click="selectCounter(counter)" class="SelectColor" :id="'counter-'+counter.ID_">
+                                                        <td>
+                                                            <div>
+                                                                {{counter.NAME_}}
+                                                            </div>
+                                                            <div class="font-grey-silver font-sm">
+                                                                {{counter.DEVICE_CODE_}}
+                                                            </div> </td>
+                                                        <td class="text-right">
+                                                            <a href="#" class="btn btn-link btn-xs" v-if="counter.STATUS_ == '2'" @click="counterEnable(counter)">启用</a>
+                                                            <a href="#" class="btn btn-link btn-xs" v-if="counter.STATUS_ == '1'" @click="counterDisable(counter)">停用</a>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cupboard-right">
+                            <div class="cupboard-info">
+                                <div class="cupboard-head clearfix">
+                                    <div class="caption">
+                                        <span class="caption-subject font-dark sbold uppercase">设备信息</span>
+                                    </div>
+                                    <div class="actions" id="modifyCounterId" v-if="counterId!=''">
+                                        <div class="btn-group">
+                                            <button href="#DeviceInfo" type="button" class="btn btn-primary btn-sm" data-toggle="modal"  @click="loadCounter(counterInfo)">调整柜台信息</button>
+                                            <button type="button" class="btn btn-warning btn-sm" v-if="passwayList.length>0" @click="copyCounterAisles">复制柜台货位</button>
+                                            <button type="button" class="btn btn-success btn-sm" v-if="passwayList.length==0" @click="pasteCounterAisles(counterInfo)">粘贴柜台货位</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cupboard-info-content">
+                                    <table class="editableInfo">
+                                        <thead>
+                                            <tr>
+                                                <th width="15%">柜台名称</th>
+                                                <th width="15%">设备编号(mid)</th>
+                                                <th width="20%">设备序列号(终端号)</th>
+                                                <th width="25%">柜台类型</th>
+                                                <th width="15%">货道数量</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>{{counterInfo.NAME_}}</td>
+                                                <td>{{counterInfo.DEVICE_CODE_}}</td>
+                                                <td>{{counterInfo.DEVICE_SN_}}</td>
+                                                <td>{{counterInfo.TYPE_LABEL}}&nbsp;&nbsp;&nbsp;{{counterInfo.DEVICE_TYPE_LABEL}}</td>
+                                                <td>{{counterInfo.AISLE_COUNT_}} </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="cupboard-cell">
+                                <div class="cupboard-head clearfix">
+                                    <div class="caption">
+                                        <span class="caption-subject font-dark sbold uppercase">货道设置</span>
+                                    </div>
+                                    <div class="actions">
+                                        <button type="button" href="#AisleInfo" class="btn btn-primary btn-sm" data-toggle="modal" @click="addPassway" v-if="counterId!=''">添加货位</button>
+                                    </div>
+                                </div>
+                                <div class="table-scrollable table-scrollable-borderless table-hasPadding2">
+                                    <table class="table table-hover table-light passageTable">
+                                        <thead>
+                                        <tr>
+                                            <th>编号/层号</th>
+                                            <th width="8%">容量</th>
+                                            <th width="34%">商品</th>
+                                            <th width="20%">价格(&yen;)</th>
+                                            <th width="10%">状态</th>
+                                            <th width="20%">操作</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr v-for="passway in passwayList" v-if="counterId != ''">
+                                            <td>
+                                                <b v-if="counterInfo.DEVICE_TYPE_=='shelf'">{{passway.FLOOR_NUM_}}</b>
+                                                <b v-else>{{passway.PLACE_NUM_}}</b>
+                                            </td>
+                                            <td>{{passway.MAX_COUNT_}}</td>
+                                            <td>
+                                                <dl class="goods-data">
+                                                    <dt>
+                                                        <img :src="passway.PICTURE_" class="img_goods_sm" />
+                                                    </dt>
+                                                    <dd>
+                                                        <div>
+                                                            {{passway.NAME_}}
+                                                        </div>
+                                                        <div class="font-grey-silver font-sm">
+                                                            {{passway.CODE_}}
+                                                        </div>
+                                                    </dd>
+                                                </dl> </td>
+                                            <td>
+                                                <ul class="payList">
+                                                    <li> <span class="spl">现金支付</span> <span class="spr">￥{{passway.CASH_PRICE_LABEL}}</span> </li>
+                                                    <li> <span class="spl">支付宝</span> <span class="spr">￥{{passway.ALI_PRICE_LABEL}}</span> </li>
+                                                    <li> <span class="spl">微信支付</span> <span class="spr">￥{{passway.WX_PRICE_LABEL}}</span> </li>
+                                                </ul>
+                                            </td>
+                                            <td>
+                                                <span class="font-green" v-if="passway.STATUS_==1">可用</span>
+                                                <span class="font-grey-silver" v-if="passway.STATUS_==2">停用</span>
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-circle btn-primary btn-xs" v-if="passway.STATUS_==2" href="#AisleInfo" data-toggle="modal" @click="editPassway(passway)">编辑</a>
+                                                <a class="btn btn-circle btn-warning btn-xs" v-if="passway.STATUS_==1" @click="stopPassway(passway)">停用</a>
+                                                <a class="btn btn-circle btn-success btn-xs" v-if="passway.STATUS_==2" @click="startPassway(passway)">启用</a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <page ref="pageInit" :page="pageConfig" @loader="pageLoader"></page>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End: life time stats -->
+        <!-- END CONTENT BODY -->
+    </div>
+    <!-- Begin:柜台设备 modal -->
+    <div class="modal fade bs-modal-lg modal-scroll" id="DeviceInfo" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">{{addCounter.title}}</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="#" class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">柜台名称</label>
+                                <div class="col-md-4">
+                                    <input type="text" v-model="addCounter.NAME_" class="form-control" placeholder="" />
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">选择设备</label>
+                                <div class="col-md-4">
+                                    <input class="form-control" type="text" list="deviceOps" v-model="addCounter.DEVICE_NAME_" @change="selectDevice" placeholder="选择添加的设备" />
+                                    <datalist id="deviceOps"> <option v-for="op in deviceList" :value="op.DEVICE_CODE_">{{op.DEVICE_NAME_}}</option> </datalist>
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">设备编号</label>
+                                <div class="col-md-4">
+                                    <input type="text" v-model="addCounter.DEVICE_CODE_" class="form-control" placeholder="" readonly="" />
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">设备序列号(终端号)</label>
+                                <div class="col-md-4">
+                                    <input type="text" v-model="addCounter.DEVICE_SN_" class="form-control" placeholder="" readonly="" />
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">货道数量</label>
+                                <div class="col-md-4">
+                                    <input type="text" v-model="addCounter.AISLE_COUNT_" class="form-control" placeholder="" readonly="" />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" @click="submitCounter(addCounter)">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End: 柜台设备 modal -->
+    <!-- BEGIN 货位信息 modal -->
+    <div class="modal fade bs-modal-lg modal-scroll" id="AisleInfo" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">{{aisleInfo.title}}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-body">
+                        <div class="form-horizontal">
+                            <div class="form-group clearfix" v-if="counterInfo.DEVICE_TYPE_=='shelf'">
+                                <label class="col-md-3 control-label">货层编号<span class="required" aria-required="true">*</span></label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" v-model="aisleInfo.FLOOR_NUM_" placeholder="" />
+                                </div>
+                            </div>
+                            <div class="form-group clearfix" v-else>
+                                <label class="col-md-3 control-label">货位编号<span class="required" aria-required="true">*</span></label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" v-model="aisleInfo.PLACE_NUM_" placeholder="" />
+                                </div>
+                            </div>
+                            <div class="form-group clearfix" v-if="counterInfo.DEVICE_TYPE_=='box'">
+                                <label class="col-md-3 control-label">货位容量</label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" v-model="aisleInfo.MAX_COUNT_" placeholder="" />
+                                </div>
+                            </div>
+                            <div class="form-group clearfix" v-if="counterInfo.DEVICE_TYPE_=='box'||counterInfo.DEVICE_TYPE_=='shelf'">
+                                <label class="col-md-3 control-label">预警值</label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" v-model="aisleInfo.WARNING_COUNT_" placeholder="" />
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">商品</label>
+                                <div class="col-md-4">
+                                    <a class="btn btn-primary" href="#GoodSelectList" data-toggle="modal" @click="selectGoods">选择商品 <i class="fa fa fa-plus"></i> </a>
+                                    <a class="btn btn-primary" @click="cleanGood(aisleInfo)">删除商品 <i class="fa fa fa-times"></i> </a>
+                                    <div class="goods_box goods_box_default">
+                                        <span class="goods_img_box"><img :src="aisleInfo.PICTURE_" class="goods_img" /></span>
+                                        <span class="goods_title">{{aisleInfo.NAME_}}</span>
+                                        <span class="goods_id">{{aisleInfo.CODE_}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                        <label class="col-md-3 control-label"> 售价<span class="required" aria-required="true">*</span> </label>
+                                        <div class="col-md-4">
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-6 control-label">现金支付(元)</label>
+                                                <div class="col-md-6">
+                                                    <input v-model="aisleInfo.CASH_PRICE_LABEL" type="text" class="form-control" readonly />
+                                                </div>
+                                            </div>
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-6 control-label">微信支付(元)</label>
+                                                <div class="col-md-6">
+                                                    <input v-model="aisleInfo.WX_PRICE_LABEL" type="text" class="form-control" readonly />
+                                                </div>
+                                            </div>
+                                            <div class="form-group clearfix">
+                                                <label class="col-md-6 control-label">支付宝(元)</label>
+                                                <div class="col-md-6">
+                                                    <input v-model="aisleInfo.ALI_PRICE_LABEL" type="text" class="form-control" readonly />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" @click="submitAisle(aisleInfo)">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END 货位信息 modal -->
+    <!-- BEGIN 选择商品 modal -->
+    <div class="modal fade bs-modal-lg modal-scroll" id="GoodSelectList" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">选择商品</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="search-bar-accurate clearfix">
+                        <div class="form-group">
+                            <label class="control-label">商品名称</label>
+                            <input type="text" class="form-control input-medium" placeholder="输入商品名称" v-model="goodSearchParams.NAME_" @keyup.enter="searchGood" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">商品编号</label>
+                            <input type="text" class="form-control input-medium" placeholder="输入商品编号" v-model="goodSearchParams.CODE_" @keyup="searchGood" />
+                        </div>
+                        <div class="form-actions">
+                            <label class="control-label"><button @click="searchGood" type="submit" class="btn btn-primary">查询</button></label>
+                        </div>
+                    </div>
+                    <div class="table-scrollable table-scrollable-borderless scrollable-y">
+                        <table class="table table-hover table-light passageTable">
+                            <tbody>
+                            <tr v-for="good in goodList">
+                                <td>
+                                    <dl class="goods-data">
+                                        <dt>
+                                            <img :src="good.PICTURE_" class="img_goods_sm" />
+                                        </dt>
+                                        <dd>
+                                            <div>
+                                                {{good.NAME_}}
+                                            </div>
+                                            <div class="font-grey-silver font-sm">
+                                                {{good.CODE_}}
+                                            </div>
+                                        </dd>
+                                    </dl> </td>
+                                <td> <a class="btn btn-primary btn-circle btn-xs" @click="aisleGoodAdd(good)">添加</a> </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END 选择商品 modal -->
+</section>
+<!-- END CONTENT -->

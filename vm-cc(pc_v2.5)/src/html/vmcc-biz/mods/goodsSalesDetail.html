@@ -1,0 +1,140 @@
+<!-- BEGIN CONTENT -->
+<section class="page-content-wrapper hidden" id="section-goodsSalesDetail" v-cloak>
+    <div class="page-head">
+        <div class="page-title">
+            <div class="caption">
+                <span>商品销售明细</span>
+            </div>
+        </div>
+        <div class="page-actions">
+        <button class="btn dark" @click="exportExcel">导出Excel</button>
+        </div>
+    </div>
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <!-- BEGIN PAGE BASE CONTENT -->
+        <div class="portlet light bordered vmui-portlet">
+            <div class="portlet-body">
+                <div class="search-bar-quick clearfix">
+                    <div class="form-group">
+                        <label class="control-label">销售时间</label>
+                        <div class="td-date-container">
+                            <div class="input-group input-daterange">
+                                <picker ref="start_time" :date="params.startTime" @refresh="pageLoader()"></picker>
+                                <span class="input-group-addon">到</span>
+                                <picker ref="end_time" :date="params.endTime" @refresh="pageLoader()"></picker>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">商品</label>
+                        <input type="text" class="form-control input-medium" v-model="params.GOODS_CODE_" placeholder="按商品编号搜索">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">退款状态</label>
+                        <select class="form-control input-small" v-model="params.refundState"
+                                @change="pageLoader()">
+                            <option value="">全部</option>
+                            <option value="1">无退款</option>
+                            <option value="2">有退款</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <label class="control-label">
+                            <button type="button" class="btn btn-primary" @click="pageLoader()">查询</button>
+                        </label>
+                    </div>
+                </div>
+
+                <!--商品销售明细-->
+                <div class="table-scrollable table-scrollable-borderless table-hasPadding">
+                    <table class="table table-hover table-light">
+                        <thead>
+                        <tr>
+                            <th width="25%">商品</th>
+                            <th width="12%">
+                                设备
+                            </th>
+                            <th width="15%">支付信息</th>
+                            <th width="8%">销售量</th>
+                            <th width="8%">支付（元）</th>
+                            <th width="8%">退款（元）</th>
+                            <th width="8%">销售（元）</th>
+                            <th width="10%">时间</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in goodsSalesList">
+                                <td>
+                                    <dl class="goods-data">
+                                        <dt class="md-hidden"><img :src="item.PICTURE_" class="img_goods_sm"></dt>
+                                        <dd>
+                                            <div>{{item.GOODS_NAME_}}</div>
+                                            <div class="font-grey-silver font-sm">{{item.GOODS_CODE_}}</div>
+                                        </dd>
+                                    </dl>
+                                </td>
+                                <td>
+                                    <div>{{item.COUNTER_NAME_}}</div>
+                                    <div class="font-grey-silver font-sm">{{item.COUNTER_SN_}}</div>
+                                </td>
+                                <td>
+                                    <div>
+                                    <i v-if="item.ORDER_PAY_CHANNEL_=='wx_pub'" class="ico-pay ico-wxpay"></i>
+                                    <i v-if="item.ORDER_PAY_CHANNEL_=='alipay_wap'" class="ico-pay ico-alipay"></i>
+                                    <i v-if="item.ORDER_PAY_CHANNEL_=='cash'" class="ico-pay ico-cashpay"></i>
+                                        {{item.ORDER_PAY_CHANNEL_LABEL}}
+                                    <span class="font-sm font-grey-silver">{{item.ORDER_CHARGE_ID_}}</span>
+                                    </div>
+                                </td>
+                                <td>{{item.COUNT_}}</td>
+                                <td><span class="bold">{{item.GOODS_TOTAL_PRICE_LABEL}}</span></td>
+                                <td><span class="bold font-red">{{item.REFUND_PRICE_LABEL}}</span></td>
+                                <td><span class="bold">{{item.PRICE_LABEL}}</span></td>
+                                <td><span class="font-sm">{{item.ORDER_CREATE_TIME_}}</span></td>
+                            </tr>
+                        </tbody>
+                        <!--<tfoot>-->
+                        <!--<tr>-->
+                            <!--<th width="20%">合计：</th>-->
+                            <!--<th width="20%">&nbsp;</th>-->
+                            <!--<th width="10%">&nbsp;</th>-->
+                            <!--<th width="10%"></th>-->
+                            <!--<th width="10%">{{sumColumn.SUM_TOTAL_PRICE_LABEL}}</th>-->
+                            <!--<th width="10%"><span class="font-red">{{sumColumn.SUM_REFUND_TOTAL_PRICE_LABEL}}</span></th>-->
+                            <!--<th width="10%">{{sumColumn.TOTAL_PRICE_LABEL}}</th>-->
+                            <!--<th width="10%">&nbsp;</th>-->
+                        <!--</tr>-->
+                        <!--</tfoot>-->
+                    </table>
+                </div>
+                <div class="bottom-total">
+                    <table class="table">
+                        <tfoot>
+                        <tr>
+                            <td>合计：</td>
+                            <td>
+                                <span class="font-sm font-grey-silver">支付金额</span>
+                                <span class="bold">{{sumColumn.SUM_TOTAL_PRICE_LABEL}}</span>
+                            </td>
+                            <td>
+                                <span class="font-sm font-grey-silver">退款金额</span>
+                                <span class="bold">{{sumColumn.SUM_REFUND_TOTAL_PRICE_LABEL}}</span>
+                            </td>
+                            <td>
+                                <span class="font-sm font-grey-silver">销售金额</span>
+                                <span class="bold">{{sumColumn.TOTAL_PRICE_LABEL}}</span>
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <page ref="pageInit" :page="pageConfig" @loader="pageLoader()"></page>
+            </div>
+        </div>
+        <!-- END PAGE BASE CONTENT -->
+    </div>
+    <!-- END CONTENT BODY -->
+</section>
+
+<!-- END CONTENT -->

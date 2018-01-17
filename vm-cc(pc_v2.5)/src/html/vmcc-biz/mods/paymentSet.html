@@ -1,0 +1,135 @@
+<!-- BEGIN CONTENT -->
+<section class="page-content-wrapper hidden" id="section-paymentSet" v-cloak>
+    <div class="page-head">
+        <div class="page-title">
+            <div class="caption">
+                <span>线上支付设置</span>
+            </div>
+        </div>
+    </div>
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <!-- BEGIN PAGE BASE CONTENT -->
+        <div class="portlet light bordered vmui-portlet">
+            <div class="portlet-body">
+                <div class="channelList">
+                    <table class="table table-hover table-borderless">
+                        <thead>
+                        <tr>
+                            <th>支付渠道</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><span class="ico-alipay"></span><span class="channel-name ">企业支付宝</span></td>
+                            <td><a class="btn btn-outline btn-circle blue btn-xs" href="#alipayModal" data-toggle="modal" @click="loadConfig" >设置</a></td>
+                        </tr>
+                        <tr>
+                            <td><span class="ico-wxpay"></span><span class="channel-name">微信支付</span></td>
+                            <td><a class="btn btn-outline btn-circle blue btn-xs" href="#weixinModal" data-toggle="modal" @click="loadConfig">设置</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- End: life time stats -->
+        <!-- 企业支付宝设置弹窗 -->
+        <div class="modal fade bs-modal-lg modal-scroll" id="alipayModal"
+             tabindex="-1" role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-hidden="true"></button>
+                        <h4 class="modal-title">企业支付宝设置</h4>
+                    </div>
+                    <div class="modal-body ">
+                        <form action="#" class="form-horizontal">
+                            <div class="form-body">
+                                <div class="form-group clearfix">
+                                    <label class="col-md-3 control-label"><span class="required" aria-required="true">*</span>APP ID</label>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" placeholder="请填入支付宝支付应用APPID" v-model="alipayConfig.appid_" >
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="col-md-3 control-label"><span class="required" aria-required="true">*</span>应用公钥</label>
+                                    <div class="col-md-4">
+                                        <textarea class="form-control " required="" placeholder="请在支付宝(开放平台->我的应用->应用信息->接口加签方式(RSA秘钥)中查看应用公钥)" v-model="alipayConfig.extra_key_"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="col-md-3 control-label"><span class="required" aria-required="true" >*</span>应用私钥</label>
+                                    <div class="col-md-4">
+                                        <textarea class="form-control " required="" placeholder="" v-model="alipayConfig.key_"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                        <button type="button"  class="btn btn-primary" @click="submitConfig('alipay')">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--End: 企业支付宝设置弹窗 -->
+        <!-- 微信公众号设置弹窗 -->
+        <div class="modal fade bs-modal-lg modal-scroll" id="weixinModal"
+             tabindex="-1" role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-hidden="true"></button>
+                        <h4 class="modal-title">微信支付设置</h4>
+                    </div>
+                    <div class="modal-body ">
+                        <form action="#" class="form-horizontal">
+                            <div class="form-body">
+                                <div class="form-group clearfix">
+                                    <label class="col-md-3 control-label"><span class="required" aria-required="true">*</span>APP ID</label>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" placeholder="" v-model="wxConfig.appid_">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="col-md-3 control-label"><span class="required" aria-required="true" >*</span>微信支付商户号</label>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" placeholder="" v-model="wxConfig.mch_id_">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="col-md-3 control-label"><span class="required" aria-required="true">*</span>商户秘钥</label>
+                                    <div class="col-md-4">
+                                        <textarea class="form-control " required="" placeholder="" v-model="wxConfig.key_"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="col-md-3 control-label"><span class="required" aria-required="true" >*</span>微信退款证书</label>
+                                    <div class="col-md-4">
+                                        <textarea class="form-control" required="" placeholder="" v-model="wxConfig.refund_cert"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" @click="submitConfig('wx')">提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--End: 微信公众号设置弹窗 -->
+        <!-- END PAGE BASE CONTENT -->
+    </div>
+    <!-- END CONTENT BODY -->
+</section>
+
+<!-- END CONTENT -->

@@ -1,0 +1,121 @@
+<!-- BEGIN CONTENT -->
+<section class="page-content-wrapper hidden" id="section-transactionStatistic">
+    <div class="page-head">
+        <div class="page-title">
+            <div class="caption">
+                <span>交易记录统计</span>
+            </div>
+        </div>
+    </div>
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <!-- BEGIN PAGE BASE CONTENT -->
+        <div class="portlet light bordered vmui-portlet">
+            <!--<div class="portlet-title">-->
+                <!--<div class="caption">-->
+                    <!--<span class="caption-subject font-dark sbold uppercase">交易记录统计</span>-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="portlet-body">
+                <div class="dateselect-module clearfix">
+                    <span class="time-lable">时间</span>
+                    <div class="btn-group btn-group-justified">
+                        <a href="javascript:;" class="btn btn-default" @click="todayStatistics">今日</a>
+                        <a href="javascript:;" class="btn btn-default" @click="yesterdayStatistics">昨日</a>
+                        <a href="javascript:;" class="btn btn-default" @click="weekStatistics">7日</a>
+                        <a href="javascript:;" class="btn btn-default" @click="twoWeekStatistics">14日</a>
+                        <a href="javascript:;" class="btn btn-default" @click="monthStatistics">30日</a>
+                    </div>
+                    <div class="td-date-container">
+                        <div class="input-group input-daterange">
+                            <input type="text" class="form-control form_datetime" name="from" id="transactionStartTime">
+                            <span class="input-group-addon">至</span>
+                            <input  type="text" class="form-control form_datetime" name="to" id="transactionSEndTime">
+                        </div>
+                    </div>
+                </div>
+                <div class="search-bar-accurate clearfix">
+                    <!--<div class="form-group">-->
+                    <!--<label class="control-label">设备名称</label>-->
+                    <!--<input type="text" class="form-control input-medium" placeholder="search...">-->
+                    <!--</div>-->
+                    <div class="form-group">
+                        <label class="control-label">柜台</label>
+                        <input type="text" class="form-control input-medium" placeholder="编号/名称" v-model="params.COUNTER_ID_">
+                    </div>
+                    <div class="form-actions">
+                        <label class="control-label">
+                            <button type="submit" class="btn btn-primary" @click="search">查询</button>
+                        </label>
+                    </div>
+                </div>
+                <div class="datasum-module clearfix">
+                    <ul>
+                        <li class="data-header">销售总金额</li>
+                        <!--<li><span class="data-money font-green-sharp" data-counter="counterup" data-value="3" id="saleTotalMoney">0</span>元</li>-->
+                        <li><span id="saleTotalMoney" class="data-money font-green-sharp" data-counter="counterup" data-value="0"></span>元</li>
+                        <li><span class="data-money font-green-sharp" data-counter="counterup" data-value="0" id="saleTotalMoneyCount"></span>笔</li>
+                    </ul>
+                    <ul>
+                        <li class="data-header">现金</li>
+                        <li><span class="data-money font-green-sharp" data-counter="counterup" data-value="0" id="cashTotalMoey">0</span>元</li>
+                        <li><span class="data-money font-green-sharp" data-counter="counterup" data-value="0" id="cashTotalMoeyCount">0</span>笔</li>
+                    </ul>
+                    <ul>
+                        <li class="data-header">微信</li>
+                        <li><span class="data-money font-green-sharp" data-counter="counterup" data-value="0" id="wxTotalMoney">0</span>元</li>
+                        <li><span class="data-money font-green-sharp" data-counter="counterup" data-value="0" id="wxTotalMoneyCount">0</span>笔</li>
+                    </ul>
+                    <ul>
+                        <li class="data-header">支付宝</li>
+                        <li><span class="data-money font-green-sharp" data-counter="counterup" data-value="0" id="alipayTotalMoney">0</span>元</li>
+                        <li><span class="data-money font-green-sharp" data-counter="counterup" data-value="0" id="alipayTotalMoneyCount">0</span>笔</li>
+                    </ul>
+                </div>
+                <div class="table-scrollable table-scrollable-borderless">
+                    <table class="table table-light">
+                        <thead>
+                        <tr id="transaction in transactionList">
+                            <th></th>
+                            <th></th>
+                            <th>现金</th>
+                            <th>微信</th>
+                            <th>支付宝</th>
+                            <th>销售总笔数</th>
+                            <th>人均金额</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <div class="font-grey-silver font-sm">柜台编号</div>
+                            </td>
+                            <td>
+                                ¥5000
+                            </td>
+                            <td>
+                                <div>¥1200/<span class="font-grey-silver">20笔</span></div>
+                            </td>
+                            <td>
+                                <div>¥1200/<span class="font-grey-silver">20笔</span></div>
+                            </td>
+                            <td>
+                                <div>¥1200/<span class="font-grey-silver">20笔</span></div>
+                            </td>
+                            <td>
+                                60笔
+                            </td>
+                            <td>¥5</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <!-- END PAGE BASE CONTENT -->
+    </div>
+    <!-- END CONTENT BODY -->
+</section>
+
+<!-- END CONTENT -->

@@ -1,0 +1,73 @@
+<section id="section-receiptRecord" class="hidden" v-cloak>
+    <div class="page-header">
+        <div class="page-head bg-gradient">
+            <a @click="returnHome" class="back"><span class="ico ico-back"></span></a>
+            <div class="title">收货记录</div>
+        </div>
+    </div>
+    <div class="page-content">
+        <div class="weui-tab head-tab ">
+            <div class="weui-navbar">
+                <a name="receipting" class="weui-navbar__item weui-bar__item--on"  @click="receipting">
+                    <span>待确认</span>
+                </a>
+                <a name="receipted" class="weui-navbar__item" @click="receipted">
+                    <span>已确认</span>
+                </a>
+            </div>
+            <div class="weui-tab__bd">
+                <div class="weui-tab__bd-item weui-tab__bd-item--active">
+                    <div class="top-alert">您有{{receiptingCount}}笔配送单待收货！</div>
+                    <div class="order-cells">
+                        <div class="order-cell" v-for="receipt in receiptList">
+                            <div class="order-cell-head">
+                                <div class="weui-cells mt-0">
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__bd">
+                                            <span class="font-md font-gray">送货人：<span class="font-bold font-black">{{receipt.deliveryInfo}}</span></span>
+                                        </div>
+                                        <div class="weui-cell__ft">
+                                            <span class="font-xs font-grayer">{{receipt.send_time}}</span>
+                                            <!--<span class="time">送货时间</span>-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="goods_purchased">
+                                <div class="weui-cells goods-cells_order">
+                                    <div class="weui-cell" v-for="detail in receipt.DeliveryNoteDetail">
+                                        <div class="weui-cell__hd">
+                                            <div class="goods-img-box">
+                                            <img :src="detail.goodsPicture" alt="" class="goods-img">
+                                                </div>
+                                        </div>
+                                        <div class="weui-cell__bd">
+                                            <div class="clearfix">
+                                                <div class="weui-cell-left fl">
+                                                    <div class="font-md">{{detail.goodsNAME}}</div>
+                                                </div>
+                                                <div class="weui-cell-right fr">
+                                                    <div class="font-sm font-grayer">数量：<span class="font-bold font-lg font-black">{{detail.goodsCount}}</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="weui-cells mt-0">
+                                <div class="weui-cell">
+                                    <div class="weui-cell__bd">
+                                        <span class="font-sm">共<span class="font-bold font-lg">{{receipt.goodsTotalCount}}</span>件商品</span>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <span><button type="button" class="btn-operate" v-if="receipt.stauts=='3'" @click="completeReceipt(receipt)">确认收货</button></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

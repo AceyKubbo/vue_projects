@@ -1,0 +1,60 @@
+<div class="login-content" id="loginView">
+    <div class="container clearfix">
+        <div class="login-left"><img src="img/login/login-bg1.jpg" width="450"></div>
+        <div class="login-right">
+            <div class="form-signin">
+                <ul id="loginTab" class="nav nav-tabs form-tab">
+                    <li class="active"><a href="#usernameLogin" data-toggle="tab">普通登录</a></li>
+                    <!--<li><a href="#telphoneLogin" data-toggle="tab">手机号登录</a></li>-->
+                </ul>
+                <div id="loginTabContent" class="tab-content">
+                    <div class="tab-pane fade in active" id="usernameLogin">
+                        <div class="login-wrap">
+                            <div class="input-group input-group-lg m-bot15">
+                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                <input id="userName1" type="text" name="username" class="form-control input-lg" placeholder="用户名"
+                                       autofocus="autofocus">
+                            </div>
+                            <div class="input-group input-group-lg m-bot15">
+                                <span class="input-group-addon"><i class=" fa fa-unlock"></i></span>
+                                <input id="userPwd1" type="password" name="password" class="form-control input-lg"
+                                       placeholder="密码"
+                                       autofocus="autofocus" @keyup.enter="loginBtn">
+                            </div>
+                            <div class="input-group input-group-lg m-bot15">
+                                <div class="checkbox-switch">
+                                    <label>
+                                        <input type="checkbox" class="css3-switch tinyswitch" checked id="switchRemeber">
+                                        <div>
+                                            <div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <span class="rememberPwd">记住密码</span>
+                                </div>
+                                <!--<a href="#" class="forgetPwd" @click="showForgetPasswordView">忘记密码？</a>-->
+                            </div>
+                            <button class="btn btn-lg btn-login btn-block" id="Login" @click="loginBtn">登录</button>
+                        </div>
+                    </div>
+                    <!--<div class="tab-pane fade" id="telphoneLogin">-->
+                        <!--<div class="login-wrap">-->
+                            <!--<div class="input-group input-group-lg m-bot15">-->
+                                <!--<span class="input-group-addon"><i class="fa fa-tablet"></i></span>-->
+                                <!--<input  type="text" id="userName2" name="username" class="form-control input-lg" placeholder="手机号" autofocus="autofocus">-->
+                            <!--</div>-->
+                            <!--<div class="input-group input-group-lg m-bot15">-->
+                                <!--<span class="input-group-addon"><i class=" fa fa-check-circle"></i></span>-->
+                                <!--<input type="text" id="userPwd2" name="text" class="form-control input-lg input-idCode" placeholder="验证码" autofocus="autofocus">-->
+                                <!--<button type="button" class="btn btn-login btn-idCode" @click="getVcode">发送验证码</button>-->
+                                <!--<button type="button" class="btn btn-login btn-idCode-disabled hidden" id="sendIn">发送成功</button>-->
+                            <!--</div>-->
+                            <!--<button class="btn btn-lg btn-login btn-block" @click="phoneloginBtn">登录</button>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

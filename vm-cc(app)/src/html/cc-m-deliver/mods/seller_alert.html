@@ -1,0 +1,188 @@
+<section id="sellerAlert">
+    <div class="page-header">
+        <!--<a href="#" class="header-actions header-actions-left"><span class="ico ico-back"></span></a>-->
+        <div class="title">待送货</div>
+    </div>
+    <div class="page-content">
+        <div class="weui-tab head-tab ">
+            <div class="weui-navbar">
+                <a class="weui-navbar__item weui-bar__item--on" href="#tab1">
+                    <span>待接单</span>
+                </a>
+                <a class="weui-navbar__item" href="#tab2">
+                    <span>配送中</span>
+                </a>
+                <a class="weui-navbar__item" href="#tab2">
+                    <span>已完成</span>
+                </a>
+            </div>
+            <div class="weui-tab__bd">
+                <div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
+                    <div class="top-alert">您有2笔订单待送货！</div>
+                    <div class="order-cells">
+                        <div class="order-cell" v-for="sellerAlerts in sellerAlertList">
+                            <div class="order-cell-head clearfix">
+                                <div class="order-cell-head-left">
+                                    <span class="title">杭州雨忆晴酒店</span>
+                                    <span class="numder">8909</span>
+                                </div>
+                                <div class="order-cell-head-right">
+                                    <span class="timekeeper">{{sellerAlerts.requestTime}}</span>
+                                    <span class="time">距离下单时间</span>
+                                </div>
+                            </div>
+                            <div class="goods_purchased">
+                                <div class="weui-cells goods-cells_order">
+                                    <div class="weui-cell" v-for="goodsDetial in goodsDetialList">
+                                        <div class="weui-cell__hd"><img :src="goodsDetial.goodsPicture" alt="" class="goods-img">
+                                        </div>
+                                        <div class="weui-cell__bd">
+                                            <div class="clearfix">
+                                                <div class="fl">
+                                                    <div class="product-title">{{goodsDetial.goodsNAME}}</div>
+                                                </div>
+                                                <div class="fr">
+                                                    <div class="product-price">数量：{{goodsDetial.goodsCount}}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="order-cell-foot clearfix">
+                                <span class="count">共2件商品</span>
+                    <span class="fr"><button type="button" class="btn-operate" @click="takingOder(sellerAlerts)">接单
+                    </button></span>
+                            </div>
+                            <!--<div class="deliver-progress">-->
+                            <!--<div class="round current" v-if="sellerAlerts.stauts == 1">待配送</div>-->
+                            <!--<div class="round current" v-if="sellerAlerts.stauts == 2">待配送</div>-->
+                            <!--<div class="round" v-if="sellerAlerts.stauts == 3">待配送</div>-->
+                            <!--<div class="round" v-if="sellerAlerts.stauts == 4">待配送</div>-->
+                            <!--<div class="next"></div>-->
+                            <!--<div class="round" v-if="sellerAlerts.stauts == '1'">配送中</div>-->
+                            <!--<div class="round " v-if="sellerAlerts.stauts == 2">待配送</div>-->
+                            <!--<div class="round " v-if="sellerAlerts.stauts == 4">待配送</div>-->
+                            <!--<div class="round current" v-if="sellerAlerts.stauts == 3">配送中</div>-->
+                            <!--<div class="next"></div>-->
+                            <!--<div class="round" v-if="sellerAlerts.stauts == '1'">配送中</div>-->
+                            <!--<div class="round " v-if="sellerAlerts.stauts == 2">待配送</div>-->
+                            <!--<div class="round " v-if="sellerAlerts.stauts == 3">待配送</div>-->
+                            <!--<div class="round current" v-if="sellerAlerts.stauts == '4'">已收货</div>-->
+                            <!--</div>-->
+                        </div>
+
+                    </div>
+                </div>
+                <div id="tab2" class="weui-tab__bd-item">
+                    <div class="order-cells">
+                        <div class="order-cell">
+                            <div class="order-cell-head clearfix">
+                                <div class="order-cell-head-left">
+                                    <span class="title">杭州雨忆晴酒店</span>
+                                    <span class="numder">8909</span>
+                                </div>
+                                <div class="order-cell-head-right">
+                                    <span class="timekeeper">00:23:54</span>
+                                    <span class="time">距离下单时间</span>
+                                </div>
+                            </div>
+                            <div class="goods_purchased">
+                                <div class="weui-cells goods-cells_order">
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd"><img src="../src/img/pic/timg.jpg" alt=""
+                                                                        class="goods-img">
+                                        </div>
+                                        <div class="weui-cell__bd">
+                                            <div class="clearfix">
+                                                <div class="fl">
+                                                    <div class="product-title">塑料一次性打火机1只</div>
+                                                </div>
+                                                <div class="fr">
+                                                    <div class="product-price">数量：2</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd"><img src="../src/img/pic/timg.jpg" alt=""
+                                                                        class="goods-img">
+                                        </div>
+                                        <div class="weui-cell__bd">
+                                            <div class="clearfix">
+                                                <div class="fl">
+                                                    <div class="product-title">塑料一次性打火机1只</div>
+                                                </div>
+                                                <div class="fr">
+                                                    <div class="product-price">数量：2</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="order-cell-foot clearfix">
+                                <span class="count">共2件商品</span>
+                                <span class="fr"><button type="button" class="btn-operate">送达</button></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab3" class="weui-tab__bd-item">
+                    <div class="order-cells">
+                        <div class="order-cell">
+                            <div class="order-cell-head clearfix">
+                                <div class="order-cell-head-left">
+                                    <span class="title">杭州雨忆晴酒店</span>
+                                    <span class="numder">8909</span>
+                                </div>
+                                <div class="order-cell-head-right">
+                                    <span class="timekeeper">00:23:54</span>
+                                    <span class="time">距离下单时间</span>
+                                </div>
+                            </div>
+                            <div class="goods_purchased">
+                                <div class="weui-cells goods-cells_order">
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd"><img src="../src/img/pic/timg.jpg" alt=""
+                                                                        class="goods-img">
+                                        </div>
+                                        <div class="weui-cell__bd">
+                                            <div class="clearfix">
+                                                <div class="fl">
+                                                    <div class="product-title">塑料一次性打火机1只</div>
+                                                </div>
+                                                <div class="fr">
+                                                    <div class="product-price">数量：2</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="weui-cell">
+                                        <div class="weui-cell__hd"><img src="../src/img/pic/timg.jpg" alt=""
+                                                                        class="goods-img">
+                                        </div>
+                                        <div class="weui-cell__bd">
+                                            <div class="clearfix">
+                                                <div class="fl">
+                                                    <div class="product-title">塑料一次性打火机1只</div>
+                                                </div>
+                                                <div class="fr">
+                                                    <div class="product-price">数量：2</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="order-cell-foot clearfix">
+                                <span class="count">共2件商品</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>

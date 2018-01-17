@@ -1,0 +1,373 @@
+<!-- BEGIN CONTENT -->
+<section class="page-content-wrapper hidden" id="section-storeManage" v-cloak>
+    <div class="page-head">
+        <div class="page-title">
+            <div class="caption">
+                <span>门店管理</span>
+            </div>
+        </div>
+        <div class="page-actions">
+            <button type="button" class="btn btn-primary" @click="addShopStore">添加门店</button>
+        </div>
+    </div>
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <!-- BEGIN PAGE BASE CONTENT -->
+        <div class="portlet light bordered vmui-portlet">
+            <!--<div class="portlet-title" >-->
+                <!--<div class="caption">-->
+                    <!--<span class="caption-subject font-dark sbold uppercase">门店管理</span>-->
+                <!--</div>-->
+                <!--<div class="actions">-->
+                    <!--<button type="button" class="btn btn-primary" @click="addShopStore">添加门店</button>-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="portlet-body">
+                <div class="search-bar-quick clearfix">
+                    <div class="form-group">
+                        <label class="control-label">门店名称</label>
+                        <input  type="text" class="form-control input-medium"  v-model="params.NAME_" placeholder="输入门店名称" @keyup.enter="search">
+                    </div>
+                    <div class="form-actions">
+                        <label class="control-label"><button type="submit" class="btn btn-primary" @click="search">查询</button></label>
+                    </div>
+                </div>
+
+                <!--门店列表-->
+                <div class="table-scrollable table-scrollable-borderless">
+                    <table class="table table-hover table-light">
+                        <thead>
+                        <tr>
+                            <th>门店</th>
+                            <th>
+                                状态
+                            </th>
+                            <th>详细地址</th>
+                            <th>支付KEY</th>
+                            <th>管理员</th>
+                            <!--<th>备注</th>-->
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="store in storeList">
+                            <td>
+                                {{store.NAME_}}
+                            </td>
+                            <td>
+                                <span class="font-green" v-if="store.STATUS_ == '1'">启用</span>
+                                <span class="font-grey-silver" v-if="store.STATUS_ == '2'">停用</span>
+                            </td>
+                            <td>{{store.ADDRESS_}}</td>
+                            <td>
+                                <div>{{store.PAY_KEY_}}</div>
+                            </td>
+                            <td>
+                                <div>{{store.CONTACT_}}</div>
+                                <div>{{store.PHONE_}}</div>
+                            </td>
+                            <!--<td>-->
+                            <!--备注-->
+                            <!--</td>-->
+                            <td>
+                                <button class="btn btn-primary btn-xs btn-circle" @click="editStore(store)">修改</button>
+                                <button class="btn btn-danger btn-xs btn-circle" @click="deleteStore(store)" v-if="store.STATUS_ == '1'">停用</button>
+                                <button class="btn btn-primary btn-xs btn-circle" @click="enableStore(store)" v-if="store.STATUS_ == '2'">启用</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="more-wrapper text-center">
+                        <div class="data-null" v-if="RecordCount == TotalCount">
+                            <p class="text-center">无更多数据</p>
+                        </div>
+                        <div class="loading_more" v-else>
+                            <button type="button" class="btn default btn-outline">加载更多</button>
+                        </div>
+                        <div class="number_datas" >已显示 <b>{{RecordCount}}</b> 条/共 <b>{{TotalCount}}</b> 条</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END PAGE BASE CONTENT -->
+    <!-- END CONTENT BODY -->
+    <!--添加门店弹窗 -->
+    <div class="modal fade bs-modal-lg modal-scroll" id="addShopStore" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">{{storeDetail.title}}</h4>
+                </div>
+                <div class="modal-body ">
+                    <form action="#" class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">门店名称<span class="required" aria-required="true">*</span></label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="请输入门店名称" v-model="storeDetail.NAME_" />
+                                </div>
+                            </div>
+                            <!--<div class="form-group">-->
+                            <!--<label class="col-md-3 control-label">行政区域</label>-->
+                            <!--<div class="col-md-6">-->
+                            <!--<div class="row">-->
+                            <!--<div class="col-md-4">-->
+                            <!--<select class="form-control input-small" v-model="storeDetail.PROVINCE_ID_"> <option value="" disabled="" selected="">省份</option> <option v-for="op in cityInfoList" v-if="op.CITY_TYPE_==1" :value="op.ID_">{{op.CITY_NAME_}}</option> </select>-->
+                            <!--</div>-->
+                            <!--<div class="col-md-4">-->
+                            <!--<select class="form-control input-small" v-model="storeDetail.CITY_ID_"> <option value="" disabled="" selected="">城市</option> <option v-for="op in cityInfoList" v-if="op.CITY_TYPE_==2&amp;&amp;op.PID_==storeDetail.PROVINCE_ID_" :value="op.ID_">{{op.CITY_NAME_}}</option> </select>-->
+                            <!--</div>-->
+                            <!--<div class="col-md-4">-->
+                            <!--<select class="form-control input-small" v-model="storeDetail.DISTRICT_ID_"> <option value="" disabled="" selected="">区县</option> <option v-for="op in cityInfoList" v-if="op.CITY_TYPE_==3&amp;&amp;op.PID_==storeDetail.CITY_ID_" :value="op.ID_">{{op.CITY_NAME_}}</option> </select>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">详细地址</label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="请输入站点详细地址" v-model="storeDetail.ADDRESS_" />
+                                </div>
+                            </div>
+                            <!--<div class="form-group clearfix">-->
+                                <!--<label class="col-md-3 control-label">站点经纬度</label>-->
+                                <!--<div class="col-md-4">-->
+                                    <!--<div class="input-group">-->
+                                        <!--<input type="text" class="form-control" placeholder="点击选取地点坐标" name="keyword" data-toggle="modal" v-model="storeDetail.STATION_LOCATION" href="#LonLatSelector" @click="loadMap" />-->
+                                        <!--&lt;!&ndash;<input type="text" class="form-control" placeholder="" data-toggle="modal" v-model="storeDetail.STATION_LAT_" href="#LonLatSelector" @click="loadMap" >&ndash;&gt;-->
+                                        <!--<span class="input-group-addon"><i class="fa fa-map-marker"></i></span>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">管理员</label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="" v-model="storeDetail.CONTACT_" />
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">联系电话</label>
+                                <div class="col-md-4">
+                                    <input type="tel" class="form-control" placeholder="" v-model="storeDetail.PHONE_" />
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">支付key<span class="required" aria-required="true">*</span></label>
+                                <div class="col-md-4">
+                                    <input type="tel" class="form-control" placeholder="" v-model="storeDetail.PAY_KEY_" />
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">商城</label>
+                                <div class="col-md-4">
+                                    <div>
+                                        <div class="checkbox-switch">
+                                            <label>
+                                                <input type="checkbox" class="css3-switch tinyswitch" v-model="storeDetail.NET_FLAG_">
+                                                <!--<input type="checkbox" class="css3-switch tinyswitch" v-model="editShopStore.NET_FLAG_" v-if="editShopStore.NET_FLAG_ = '0'||''">-->
+                                                <div>
+                                                    <div>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                            <span>启用</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">补货库存检查</label>
+                                <div class="col-md-4">
+                                    <div>
+                                        <div class="checkbox-switch">
+                                            <label>
+                                                <!--<input type="checkbox" class="css3-switch tinyswitch" v-model="editShopStore.GRID_FLAG_" v-if="editShopStore.GRID_FLAG_ = '0'||''">-->
+                                                <input type="checkbox" class="css3-switch tinyswitch" v-model='storeDetail.CHECK_STOCK_FLAG_'>
+                                                <div>
+                                                    <div>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                            <span>启用</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">备注</label>
+                                <div class="col-md-4">
+                                    <textarea class="form-control " required="" placeholder="" v-model="storeDetail.REMARK_"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn grey-salsa btn-outline">取消</button>
+                    <button type="button" @click="submitStation" class="btn btn-primary">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End: 添加门店弹窗 -->
+    <!--编辑门店弹窗 -->
+    <div class="modal fade bs-modal-lg modal-scroll" id="editShopStore" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">{{editShopStore.title}}</h4>
+                </div>
+                <div class="modal-body ">
+                    <form action="#" class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">门店名称<span class="required" aria-required="true">*</span></label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="请输入门店名称" v-model="editShopStore.NAME_" />
+                                </div>
+                            </div>
+                            <!--<div class="form-group">-->
+                            <!--<label class="col-md-3 control-label">行政区域</label>-->
+                            <!--<div class="col-md-6">-->
+                            <!--<div class="row">-->
+                            <!--<div class="col-md-4">-->
+                            <!--<select class="form-control input-small" v-model="storeDetail.PROVINCE_ID_"> <option value="" disabled="" selected="">省份</option> <option v-for="op in cityInfoList" v-if="op.CITY_TYPE_==1" :value="op.ID_">{{op.CITY_NAME_}}</option> </select>-->
+                            <!--</div>-->
+                            <!--<div class="col-md-4">-->
+                            <!--<select class="form-control input-small" v-model="storeDetail.CITY_ID_"> <option value="" disabled="" selected="">城市</option> <option v-for="op in cityInfoList" v-if="op.CITY_TYPE_==2&amp;&amp;op.PID_==storeDetail.PROVINCE_ID_" :value="op.ID_">{{op.CITY_NAME_}}</option> </select>-->
+                            <!--</div>-->
+                            <!--<div class="col-md-4">-->
+                            <!--<select class="form-control input-small" v-model="storeDetail.DISTRICT_ID_"> <option value="" disabled="" selected="">区县</option> <option v-for="op in cityInfoList" v-if="op.CITY_TYPE_==3&amp;&amp;op.PID_==storeDetail.CITY_ID_" :value="op.ID_">{{op.CITY_NAME_}}</option> </select>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">详细地址</label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="请输入站点详细地址" v-model="editShopStore.ADDRESS_" />
+                                </div>
+                            </div>
+                            <!--<div class="form-group clearfix">-->
+                                <!--<label class="col-md-3 control-label">站点经纬度</label>-->
+                                <!--<div class="col-md-4">-->
+                                    <!--<div class="input-group">-->
+                                        <!--<input type="text" class="form-control" placeholder="点击选取地点坐标" name="keyword" data-toggle="modal" v-model="editShopStore.STATION_LOCATION" href="#LonLatSelector" @click="loadMap" />-->
+                                        <!--&lt;!&ndash;<input type="text" class="form-control" placeholder="" data-toggle="modal" v-model="storeDetail.STATION_LAT_" href="#LonLatSelector" @click="loadMap" >&ndash;&gt;-->
+                                        <!--<span class="input-group-addon"><i class="fa fa-map-marker"></i></span>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">管理员</label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="" v-model="editShopStore.CONTACT_" />
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">联系电话</label>
+                                <div class="col-md-4">
+                                    <input type="tel" class="form-control" placeholder="" v-model="editShopStore.PHONE_" />
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">支付key<span class="required" aria-required="true">*</span></label>
+                                <div class="col-md-4">
+                                    <input type="tel" class="form-control" placeholder="" v-model="editShopStore.PAY_KEY_" />
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">商城</label>
+                                <div class="col-md-4">
+                                    <div>
+                                        <div class="checkbox-switch">
+                                            <label>
+                                                <input type="checkbox" class="css3-switch tinyswitch" v-model="editShopStore.NET_FLAG_">
+                                                <!--<input type="checkbox" class="css3-switch tinyswitch" v-model="editShopStore.NET_FLAG_" v-if="editShopStore.NET_FLAG_ = '0'||''">-->
+                                                <div>
+                                                    <div>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                            <span>启用</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">补货库存检查</label>
+                                <div class="col-md-4">
+                                    <div>
+                                        <div class="checkbox-switch">
+                                            <label>
+                                                <!--<input type="checkbox" class="css3-switch tinyswitch" v-model="editShopStore.GRID_FLAG_" v-if="editShopStore.GRID_FLAG_ = '0'||''">-->
+                                                <input type="checkbox" class="css3-switch tinyswitch" v-model='editShopStore.CHECK_STOCK_FLAG_'>
+                                                <div>
+                                                    <div>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                            <span>启用</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">备注</label>
+                                <div class="col-md-4">
+                                    <textarea class="form-control " required="" placeholder="" v-model="editShopStore.REMARK_"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-dismiss="modal" class="btn grey-salsa btn-outline">取消</button>
+                    <button type="button" @click="submitEditStation(editShopStore)" class="btn btn-primary">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--End: 编辑门店弹窗 -->
+    <!-- BEGIN 经纬度 modal -->
+    <div class="modal fade bs-modal-lg modal-scroll" id="LonLatSelector" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">设置经纬度</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="mapArea">
+                        <div id="GaoDe_map" class="daode-map"></div>
+                        <div class="mapTop ">
+                            <div class="searchbox-container">
+                                <div class="searchbox-content">
+                                    <input id="search_condition" type="text" v-model="mapInfo.search_condition" class="sole-input" placeholder="请输入关键字" @change="searchMapChange(mapInfo.search_condition)" @keyup.enter="searchMap(mapInfo)" />
+                                    <div id="input-clear" class="input-clear" style="display: none" @click="cleanSearchAMap" title="清空"></div>
+                                </div>
+                            </div>
+                            <button type="button" @click="searchMap(mapInfo)"></button>
+                        </div>
+                        <div class="mapRight">
+                            <div class="data-container">
+                                <span>{{mapInfo.STATION_LON_}},{{mapInfo.STATION_LAT_}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消 </button>
+                    <button type="button" class="btn btn-primary" @click="submitLonLat">确定</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- END 经纬度 modal -->
+</section>
+<!-- END CONTENT -->

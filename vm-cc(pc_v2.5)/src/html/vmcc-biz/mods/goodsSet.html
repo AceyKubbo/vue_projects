@@ -1,0 +1,276 @@
+<!-- BEGIN CONTENT -->
+<section class="page-content-wrapper hidden" id="section-goodsSet" v-cloak>
+    <div class="page-head">
+        <div class="page-title">
+            <div class="caption">
+                <span>商品设置</span>
+            </div>
+        </div>
+        <div class="page-actions">
+            <button type="button" class="btn btn-primary" data-toggle="modal" @click="addGood">添加商品
+            </button>
+        </div>
+    </div>
+    <!--<div class="portlet-title">-->
+        <!--<div class="caption">-->
+            <!--<span class="caption-subject font-dark sbold uppercase">商品设置</span>-->
+        <!--</div>-->
+        <!--<div class="actions">-->
+            <!--<button type="button" class="btn btn-primary" data-toggle="modal" @click="addGood">添加商品-->
+            <!--</button>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <!-- BEGIN PAGE BASE CONTENT -->
+        <div class="portlet light bordered vmui-portlet">
+            <div class="portlet-body">
+                <div class="tree-body clearfix">
+                    <div class="tree-box"><!--当页面滚动到一定位置之后，让元素固定在顶部添加tree-box-fixed，小于位置后恢复原来的位置-->
+                        <div id="tree_1" class="tree-menu" >
+                            <!--<ul>-->
+                            <!--<li>所有分类-->
+                            <!--<ul>-->
+                            <!--<li data-jstree='{ "selected" : true }'>-->
+                            <!--<a href="javascript:;">一级菜单1</a>-->
+                            <!--</li>-->
+                            <!--<li data-jstree='{ "icon" : "fa fa-briefcase icon-state-success " }'>一级菜单2</li>-->
+                            <!--<li data-jstree='{ "opened" : true }'>一级菜单3-->
+                            <!--<ul>-->
+                            <!--<li data-jstree='{ "disabled" : true }'> 二级菜单1</li>-->
+                            <!--<li data-jstree='{ "type" : "file" }'> 二级菜单2</li>-->
+                            <!--</ul>-->
+                            <!--</li>-->
+                            <!--</ul>-->
+                            <!--</li>-->
+                            <!--</ul>-->
+                        </div>
+                    </div>
+                    <div class="rightcontent-box">
+                        <div class="tabbable-line">
+                            <ul class="nav nav-tabs">
+                                <li class="active">
+                                    <a href="#" data-toggle="tab" @click="changeTab('all')">全部</a>
+                                </li>
+                                <li>
+                                    <a href="#" data-toggle="tab" @click="changeTab('normal')">正常</a>
+                                </li>
+                                <li>
+                                    <a href="#" data-toggle="tab" @click="changeTab('stop')">停用</a>
+                                </li>
+                            </ul>
+                            <div class="search-bar-accurate clearfix" >
+                                <div class="form-group">
+                                    <label class="control-label">商品名称</label>
+                                    <input v-model="params.NAME_" type="text" class="form-control input-medium" @keyup.enter="searchGood" placeholder="输入商品名称">
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">商品编号</label>
+                                    <input v-model="params.CODE_" type="text" @keyup="searchGood" class="form-control input-medium"  placeholder="输入商品编号">
+                                </div>
+                                <div class="form-actions">
+                                    <label class="control-label"><button @click="searchGood" type="submit" class="btn btn-primary">查询</button></label>
+                                </div>
+                            </div>
+                            <div class="tab-content">
+                                <div class="tab-pane active">
+                                    <div class="table-scrollable table-scrollable-borderless">
+                                        <table class="table table-hover table-light goodsTable">
+                                            <thead>
+                                            <tr>
+                                                <th>商品</th>
+                                                <th>状态</th>
+                                                <th>售价(¥)</th>
+                                                <th>操作</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr v-for="good in goodList">
+                                                <td name="goodsDetail">
+                                                    <dl class="goods-data">
+                                                        <dt><img :src="good.PICTURE_" class="img_goods_sm"></dt>
+                                                        <dd><div>{{good.NAME_}} </div><div class="font-grey-silver font-sm">{{good.CODE_}}</div></dd>
+                                                    </dl>
+                                                </td>
+                                                <td>
+                                                    <span v-if="good.STATUS_==1" class="font-blue">正常</span>
+                                                    <span v-if="good.STATUS_==2" class="font-grey-silver">停用</span>
+                                                    <!--<span v-if="good.STATUS_==3" class="font-grey-silver">删除</span>-->
+
+                                                </td>
+                                                <td>
+                                                    <ul class="payList">
+                                                        <li> <span class="spl">现金支付</span> <span class="spr">￥ {{good.CASH_PRICE_LABEL}}</span> </li>
+                                                        <li> <span class="spl">支付宝</span> <span class="spr">￥ {{good.ALI_PRICE_LABEL}}</span> </li>
+                                                        <li> <span class="spl">微信支付</span> <span class="spr">￥ {{good.WX_PRICE_LABEL}}</span> </li>
+                                                    </ul>
+                                                </td>
+                                                <td><a class="btn btn-circle btn-primary btn-xs"
+                                                       href="#GoodInfo" data-toggle="modal" @click="editGood(good)">编辑</a>
+                                                    <a class="btn btn-circle btn-warning btn-xs"
+                                                       href="#" v-if="good.STATUS_==1" @click="stopGood(good)">停用</a>
+                                                    <a class="btn btn-circle btn-success btn-xs"
+                                                       href="#" v-if="good.STATUS_==2" @click="startGood(good)">启用</a>
+                                                    <!--<a class="btn btn-circle red-mint btn-xs"-->
+                                                       <!--href="#" v-if="good.STATUS_==2" @click="delGood(good)">删除</a>-->
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="more-wrapper text-center" >
+                                            <div class="data-null" v-if="TotalCount==RecordCount">
+                                                <p class="text-center">无更多数据</p>
+                                            </div>
+                                            <div class="loading_more" v-else>
+                                                <button type="button" @click="loadMore()" class="btn default btn-outline">加载更多</button>
+                                            </div>
+                                            <div class="number_datas" >已显示 <b>{{RecordCount}}</b> 条/共 <b>{{TotalCount}}</b> 条</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End: life time stats -->
+        <!-- Begin: 添加商品弹窗 -->
+        <div class="modal fade bs-modal-lg  modal-scroll search-modal" id="GoodsAdd"
+             tabindex="-1" role="dialog" aria-hidden="true"  >
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header clearfix">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-hidden="true"></button>
+                        <h4 class="modal-title">添加商品</h4>
+                        <div class="modal-search">
+                            <div class="input-group">
+                                        <span class="input-group-addon input-circle-left">
+                                            <i class="fa fa-search"></i>
+                                        </span>
+                                <input type="text" class="form-control input-circle-right" placeholder="按商品编号或商品名称搜索"  v-model="goodParams.searchCondition" @keyup.enter="searchGoodLib">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <!--<div class="search-bar-accurate clearfix" >-->
+                        <!--<div class="form-group">-->
+                        <!--<label class="control-label">商品名称</label>-->
+                        <!--<input type="text" class="form-control input-medium" placeholder="输入商品名称" v-model="params.goodLib.NAME_" @keyup.enter="searchGoodLib">-->
+                        <!--</div>-->
+                        <!--<div class="form-group">-->
+                        <!--<label class="control-label">商品编号</label>-->
+                        <!--<input type="text" class="form-control input-medium" placeholder="输入商品编号" v-model="params.goodLib.CODE_" @keyup="searchGoodLib">-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <div class="table-scrollable table-scrollable-borderless scrollable-y">
+                            <table class="table table-hover table-light passageTable">
+                                <tbody>
+                                <tr v-for="good in goodLib">
+                                    <td>
+                                        <dl class="goods-data">
+                                            <dt><img :src="good.PICTURE_" class="img_goods_sm"></dt>
+                                            <dd><div>{{good.NAME_}}</div><div class="font-grey-silver font-sm">{{good.CODE_}}</div></dd>
+                                        </dl>
+                                    </td>
+                                    <td>
+                                        <label class="mt-checkbox mt-checkbox-outline">
+                                            <input type="checkbox" :value="good" v-model="checkboxGoodLibList"/>
+                                            <span></span>
+                                        </label>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary" @click="importGoods" >提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End: 添加商品弹窗 -->
+        <!-- Begin: 编辑商品弹窗 -->
+        <div class="modal fade bs-modal-lg modal-scroll" id="GoodInfo"
+             tabindex="-1" role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-hidden="true"></button>
+                        <h4 class="modal-title">{{goodDetail.title}}</h4>
+                    </div>
+                    <div class="modal-body ">
+                        <form action="#" method="get" class="form-horizontal">
+                            <div class="form-body">
+                                <div class="form-group clearfix">
+                                    <label class="col-md-3 control-label"><span class="required" aria-required="true">*</span>商品编号</label>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" v-model="goodDetail.CODE_" placeholder="" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="col-md-3 control-label"><span class="required" aria-required="true">*</span>商品名称</label>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" v-model="goodDetail.NAME_" placeholder="字段长度不要超过12个字符，不能使用%*/等特殊字符">
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="col-md-3 control-label">成本价格(元)</label>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" v-model="goodDetail.COST_PRICE_LABEL" placeholder="" >
+                                    </div>
+                                </div>
+                                <!--<div class="form-group clearfix">-->
+                                    <!--<label class="col-md-3 control-label">最大库存量</label>-->
+                                    <!--<div class="col-md-4">-->
+                                        <!--<input type="text" class="form-control" placeholder="" v-model="goodDetail.MAX_STOCK_">-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <div class="form-group clearfix">
+                                    <label class="col-md-3 control-label">商品图片</label>
+                                    <div class="col-md-4">
+                                        <div class="thumbnail goods-thumbnail">
+                                            <img :src="goodDetail.PICTURE_">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group clearfix">
+                                    <label class="col-md-3 control-label">
+                                        售价<span class="required" aria-required="true">*</span>
+                                    </label>
+                                    <div class="col-md-4">
+                                        <div class="form-group clearfix">
+                                            <label class="col-md-6 control-label">现金支付(元)</label>
+                                            <div class="col-md-6"><input v-model="goodDetail.CASH_PRICE_LABEL" type="text" class="form-control"></div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <label class="col-md-6 control-label">微信支付(元)</label>
+                                            <div class="col-md-6"><input v-model="goodDetail.WX_PRICE_LABEL" type="text" class="form-control"></div>
+                                        </div>
+                                        <div class="form-group clearfix">
+                                            <label class="col-md-6 control-label">支付宝(元)</label>
+                                            <div class="col-md-6"><input v-model="goodDetail.ALI_PRICE_LABEL" type="text" class="form-control"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-primary" @click="submitGood(goodDetail)" >提交</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End: 编辑商品弹窗 -->
+        <!-- END PAGE BASE CONTENT -->
+    </div>
+    <!-- END CONTENT BODY -->
+</section>
+<!-- END CONTENT -->

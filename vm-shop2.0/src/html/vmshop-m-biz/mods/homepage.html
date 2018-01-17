@@ -1,0 +1,317 @@
+<section id="section-homepage" v-cloak>
+    <div class="page-header main-gradient">
+        <div class="title">{{homepageData.STORE_NAME_}}({{homepageData.QR_NAME_}})</div>
+    </div>
+    <div class="page-content">
+        <div class="weui-tab head-tab">
+            <div class="weui-navbar">
+                <a class="weui-navbar__item" @click="jumpMogeGrid" id="mogeGridHeader">
+                    <span>魔格精品</span>
+                </a>
+                <a class="weui-navbar__item" @click="jumpMogeNet" id="mogeNetHeader">
+                    <span>店内优选</span>
+                </a>
+            </div>
+            <div class="weui-tab__bd">
+                <div id="mogeGrid" class="weui-tab__bd-item">
+                    <div class="weui-cells moge-cells" id="gridDetailsId">
+                        <div class="weui-cell" v-for="goods in goodsList">
+                            <div class="weui-cell__hd" v-if="goods.COUNT_ > '0'">
+                                <div class="goods-img-box">
+                                    <img :src="goods.PICTURE_" alt="" class="goods-img" @click="goodsDetailShow(goods)">
+                                </div>
+                            </div>
+                            <div class="weui-cell__hd" v-else>
+                                <div class="goods-img-box">
+                                    <img :src="goods.PICTURE_" alt="" class="goods-img soldOut" @click="goodsDetailShow(goods)">
+                                    <div class="soldOut-bg" @click="goodsDetailShow(goods)"></div>
+                                </div>
+                            </div>
+                            <div class="weui-cell__bd" @click="goodsDetailShow(goods)">
+                                <div class="product-title">{{goods.NAME_}}</div>
+                                <div class="product-price">￥<span>{{goods.WX_PRICE_}}</span></div>
+                                <div class="grid-number">货道号：{{goods.PLACE_NUM_}}</div>
+                            </div>
+                            <div class="quantity-set">
+                                <a class="btn-reduce" @click="reduceNumber(goods)" v-if="goods.BUY_COUNT_ > 0"><i class="ico ico-reduce"></i></a>
+                                <span class="quantity-value" v-if="goods.BUY_COUNT_ > 0">{{goods.BUY_COUNT_}}</span>
+                                <a class="btn-add" @click="addNumber(goods)" v-if="goods.COUNT_ > 0 && goods.BUY_COUNT_ < goods.COUNT_"><i class="ico ico-add"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weui-cells moge-cells" id="shelfDetailsId">
+                        <div class="side-tab">
+                            <div v-if="homepageData.DEVICE_TYPE_=='shelf'" class="side-navbar">
+                                <a id="totalFloor" class="side-navbar__item side-navbar__item--on" value="" @click="switchSTotalSort">
+                                    <span>全部</span>
+                                </a>
+                                <a class="side-navbar__item" value="1" @click="switchFloor">
+                                    <span>第一层</span>
+                                </a>
+                                <a class="side-navbar__item" value="2" @click="switchFloor">
+                                    <span>第二层</span>
+                                </a>
+                                <a class="side-navbar__item" value="3" @click="switchFloor">
+                                    <span>第三层</span>
+                                </a>
+                                <a class="side-navbar__item" value="4" @click="switchFloor">
+                                    <span>第四层</span>
+                                </a>
+                                <a class="side-navbar__item" value="5" @click="switchFloor">
+                                    <span>第五层</span>
+                                </a>
+                            </div>
+                            <div class="side-tab__bd">
+                                <div class="side-tab__bd-item side-tab__bd-item--active">
+                                    <div class="weui-cells moge-cells mogenet-cells">
+                                        <!--<div class="weui-cells__title">第{{}}层</div>-->
+                                        <div class="weui-cell" v-for="goods in goodsList">
+                                            <div class="weui-cell__hd" v-if="goods.COUNT_ > '0'">
+                                                <div class="goods-img-box" @click="goodsDetailShow(goods)">
+                                                    <img :src="goods.PICTURE_" alt="" class="goods-img" >
+                                                </div>
+                                            </div>
+                                            <div class="weui-cell__hd" v-else>
+                                                <div class="goods-img-box">
+                                                <img :src="goods.PICTURE_" alt="" class="goods-img soldOut" @click="goodsDetailShow(goods)">
+                                                <div class="soldOut-bg" @click="goodsDetailShow(goods)"></div>
+                                                </div>
+                                            </div>
+                                            <div class="weui-cell__bd" @click="goodsDetailShow(goods)">
+                                                <div class="product-title">{{goods.NAME_}}</div>
+                                                <div class="product-price">¥<span>{{goods.WX_PRICE_}}</span></div>
+                                                <div class="grid-number" >库存量：{{goods.COUNT_}}</div>
+                                            </div>
+                                            <div class="quantity-set">
+                                                <a class="btn-reduce" @click="reduceNumber(goods)" v-if="goods.BUY_COUNT_ > 0"><i class="ico ico-reduce"></i></a>
+                                                <span class="quantity-value" v-if="goods.BUY_COUNT_ > 0">{{goods.BUY_COUNT_}}</span>
+                                                <a class="btn-add" @click="addNumber(goods)" v-if="goods.COUNT_ > 0 && goods.BUY_COUNT_ < goods.COUNT_"><i class="ico ico-add"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div id="shelfDetailsId" class="">-->
+                    <!--<div class="weui-cell" v-for="goods in goodsList">-->
+                    <!--<div class="weui-cell__hd" v-if="goods.COUNT_ > '0'">-->
+                    <!--<img :src="goods.PICTURE_" alt="" class="goods-img" @click="goodsDetailShow(goods)"></div>-->
+                    <!--<div class="weui-cell__hd" v-else>-->
+                    <!--<img :src="goods.PICTURE_" alt="" class="goods-img soldOut" @click="goodsDetailShow(goods)">-->
+                    <!--<div class="soldOut-bg" @click="goodsDetailShow(goods)"></div>-->
+                    <!--</div>-->
+                    <!--<div class="weui-cell__bd" @click="goodsDetailShow(goods)">-->
+                    <!--<div class="product-title">{{goods.NAME_}}</div>-->
+                    <!--<div class="product-price">￥<span>{{goods.WX_PRICE_}}</span></div>-->
+                    <!--<div class="grid-number">层数：{{goods.FLOOR_NUM_}}</div>-->
+                    <!--&lt;!&ndash;<div class="grid-number">层数：{{goods.}}</div>&ndash;&gt;-->
+                    <!--</div>-->
+                    <!--<div class="quantity-set">-->
+                    <!--<a class="btn-reduce" @click="reduceNumber(goods)" v-if="goods.BUY_COUNT_ > 0"><i class="ico ico-reduce"></i></a>-->
+                    <!--<span class="quantity-value" v-if="goods.BUY_COUNT_ > 0">{{goods.BUY_COUNT_}}</span>-->
+                    <!--<a class="btn-add" @click="addNumber(goods)" v-if="goods.COUNT_ > 0 && goods.BUY_COUNT_ < goods.COUNT_"><i class="ico ico-add"></i></a>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                </div>
+                <div id="mogeNet" class="weui-tab__bd-item">
+                    <div class="side-tab">
+                        <div class="side-navbar">
+                            <a id= "totalSort" class="side-navbar__item side-navbar__item--on" @click="switchSTotalSort">
+                                <span>全部</span>
+                            </a>
+                            <a class="side-navbar__item" @click="switchSort" :value = '7'>
+                                <span>饮料酒水</span>
+                            </a>
+                            <a class="side-navbar__item" @click="switchSort" :value = '9'>
+                                <span>休闲零食</span>
+                            </a>
+                            <a class="side-navbar__item" @click="switchSort" :value = '11'>
+                                <span>日用百货</span>
+                            </a>
+                            <a class="side-navbar__item" @click="switchSort" :value = '13'>
+                                <span>计生用品</span>
+                            </a>
+                            <a class="side-navbar__item" @click="switchSort" :value = '14'>
+                                <span>其他</span>
+                            </a>
+                        </div>
+                        <div class="side-tab__bd">
+                            <div class="side-tab__bd-item side-tab__bd-item--active">
+                                <div class="weui-cells moge-cells mogenet-cells">
+                                    <div class="weui-cell" v-for="goods in goodsList">
+                                        <div class="weui-cell__hd" v-if="goods.SHOP_COUNT_ > '0'">
+                                            <div class="goods-img-box">
+                                                <img :src="goods.PICTURE_" alt="" class="goods-img" @click="goodsDetailShow(goods)" >
+                                            </div>
+                                        </div>
+                                        <div class="weui-cell__hd" v-else>
+                                            <div class="goods-img-box">
+                                                <img :src="goods.PICTURE_" alt="" class="goods-img soldOut" @click="goodsDetailShow(goods)">
+                                                <div class="soldOut-bg" @click="goodsDetailShow(goods)"></div>
+                                            </div>
+                                        </div>
+                                        <div class="weui-cell__bd" @click="goodsDetailShow(goods)">
+                                            <div class="product-title">{{goods.NAME_}}</div>
+                                            <div class="product-price">¥<span>{{goods.WX_PRICE_}}</span></div>
+                                            <div class="grid-number">库存量：{{goods.SHOP_COUNT_}}</div>
+                                        </div>
+                                        <div class="quantity-set">
+                                            <a class="btn-reduce" @click="reduceNumber(goods)" v-if="goods.BUY_COUNT_ > 0"><i
+                                                    class="ico ico-reduce"></i></a>
+                                            <span class="quantity-value" v-if="goods.BUY_COUNT_ > 0">{{goods.BUY_COUNT_}}</span>
+                                            <a class="btn-add" @click="addNumber(goods)" v-if="goods.BUY_COUNT_ < goods.SHOP_COUNT_"><i class="ico ico-add"></i></a>
+                                        </div>
+                                    </div>
+                                    <!--<div class="weui-cell">-->
+                                    <!--<div class="weui-cell__hd"><img src="img/pic/timg.jpg" alt=""-->
+                                    <!--class="goods-img"></div>-->
+                                    <!--<div class="weui-cell__bd">-->
+                                    <!--<div class="product-title">塑料一次性打火机1只</div>-->
+                                    <!--<div class="product-price">￥<span>2.00</span></div>-->
+                                    <!--<div class="grid-number">货道号：11</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="weui-cell__ft">-->
+                                    <!--<div class="quantity-set">-->
+
+                                    <!--<a href="#" class="btn-add"><i class="ico ico-add"></i></a>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="weui-cell">-->
+                                    <!--<div class="weui-cell__hd"><img src="img/pic/timg.jpg" alt=""-->
+                                    <!--class="goods-img"></div>-->
+                                    <!--<div class="weui-cell__bd">-->
+                                    <!--<div class="product-title">塑料一次性打火机1只</div>-->
+                                    <!--<div class="product-price">￥<span>2.00</span></div>-->
+                                    <!--<div class="grid-number">货道号：11</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="weui-cell__ft">-->
+                                    <!--<div class="quantity-set">-->
+                                    <!--<a href="#" class="btn-add"><i class="ico ico-add"></i></a>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+                                </div>
+                                <!--<div class="weui-loadmore">-->
+                                <!--<i class="weui-loading"></i>-->
+                                <!--<span class="weui-loadmore__tips">正在加载</span>-->
+                                <!--</div>-->
+                                <!--<div class="weui-loadmore weui-loadmore_line">-->
+                                <!--<span class="weui-loadmore__tips">暂无数据</span>-->
+                                <!--</div>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="weui-tabbar">
+        <a class="weui-tabbar__item weui-bar__item--on" @click="jumpHomepage">
+            <div class="weui-tabbar__icon">
+                <img src="img/ico-home-current.png">
+            </div>
+            <p class="weui-tabbar__label">首页</p>
+        </a>
+        <a class="weui-tabbar__item" @click="jumpPersonalCenter">
+            <div class="weui-tabbar__icon">
+                <img src="img/ico-person.png">
+            </div>
+            <p class="weui-tabbar__label">我的</p>
+        </a>
+    </div>
+
+    <div class="bottom-toolbar hidden" id="shoppingCart">
+        <div class="moge-alert">魔格精品中单品超过1件时,超过货物将由前台送货！</div>
+        <a class="to-buy" @click="jumpPayment">去支付</a>
+        <!--<span class="bottom-textbox">去选购商品吧！</span>-->
+        <span class="bottom-textbox" @click="shoppingDetail">
+            合计：<i>¥{{homepageData.totalMoney}}</i>
+            <span class="bottom-textbox-minor">
+                已选购{{homepageData.GOODS_COUNT_}}件商品
+            </span>
+        </span>
+        <a class="shoppingCart empty" @click="shoppingDetail">
+            <span class="ico"></span>
+            <span class="weui-badge" style="position: absolute;top:0rem;right: 0.1rem;">{{homepageData.GOODS_COUNT_}}</span>
+        </a>
+    </div>
+    <div class="weui-popup__container popup-bottom popup-shopCart" id="shoppingCartDetail">
+        <!--weui-popup__container--visible-->
+        <div class="weui-popup__overlay"></div>
+        <div class="weui-popup__modal">
+            <div class="toolbar">
+                <div class="toolbar-head clearfix">
+                    <div class="tt">
+                        已选商品
+                    </div>
+                    <div class="delete"><i class="weui-icon-delete" @click="cleanshoppingCart"></i><span @click="cleanshoppingCart">清空</span></div>
+                </div>
+            </div>
+            <div class="modal-content">
+                <div class="weui-cells shopCart-cells">
+                    <div class="weui-cell" v-for="shoppingcartDetail in shoppingcartDetailList">
+                        <div class="weui-cell__hd">
+                            <div class="img-box">
+                                <img :src="shoppingcartDetail.PICTURE_" alt="" class="goods-img">
+                                <div class="product-label default" v-if="shoppingcartDetail.DELIVERY_TYPE_ == '1'">魔格自取</div>
+                                <div class="product-label warning"v-if="shoppingcartDetail.DELIVERY_TYPE_ == '2'">前台送货</div>
+                            </div>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <div class="product-title">{{shoppingcartDetail.GOODS_NAME_}}</div>
+                            <div class="product-price">¥<span>{{shoppingcartDetail.GOODS_PRICE_LABEL}}</span></div>
+                        </div>
+                        <div class="weui-cell__ft">
+                            <div class="quantity-set">
+                                <a href="#" class="btn-reduce" @click="shoppingcartGoodsreduce(shoppingcartDetail)"><i class="ico ico-reduce"></i></a>
+                                <span class="quantity-value">{{shoppingcartDetail.COUNT_}}</span>
+                                <a href="#" class="btn-add" @click="shoppingcartGoodsAdd(shoppingcartDetail)"><i class="ico ico-add"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="weui-cell">-->
+                    <!--<div class="weui-cell__bd">-->
+                    <!--<div class="product-title">农夫山泉乐瓶饮用天然水550ml</div>-->
+                    <!--<div class="product-label warning">前台送货</div>-->
+                    <!--</div>-->
+                    <!--<div class="weui-cell__ft">-->
+                    <!--<div class="product-price">￥<span>2.00</span></div>-->
+                    <!--<div class="quantity-set">-->
+                    <!--<a href="#" class="btn-reduce"><i class="ico ico-reduce"></i></a>-->
+                    <!--<span class="quantity-value">1</span>-->
+                    <!--<a href="#" class="btn-add"><i class="ico ico-add"></i></a>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="vmshop-mask" id="goodsDetailBackground" @click="hideBackground"></div><!-- 显示时添加vmshop-mask--visible 弹出详情-->
+    <div class="vmshop-dialog" id="goodsDetail"><!-- 显示时添加vmshop-dialog--visible -->
+        <div class="datails_dialog">
+            <div class="goods-img-box">
+                <img :src="goodsDetail.PICTURE_">
+            </div>
+            <div class="goods-info">
+                <div class="goods-info-top clearfix">
+                    <div class="product-title">{{goodsDetail.NAME_}}</div>
+                    <div class="product-price">¥<span>{{goodsDetail.WX_PRICE_}}</span></div>
+                </div>
+                <div class="grid-number" id="gridDetailStockId">库存量：{{goodsDetail.COUNT_}}</div>
+                <div class="grid-number" id="elseDetailStockId">库存量：{{goodsDetail.SHOP_COUNT_}}</div>
+            </div>
+            <!--<div class="incident-text">售卖机自取商品购买成功后，售卖机柜门会自动打开，请及时取货。</div>-->
+        </div>
+    </div>
+    <div class="vmshop-nodata vmshop-nodata-absolute hidden" id="noCounter">
+        <div class="vmshop-nodata-img"><img src="img/nodata.png"></div>
+        <!--<p>你的对象不存在，换个姿势试试吧！</p>-->
+        <p>此设备不存在</p>
+    </div>
+</section>
+

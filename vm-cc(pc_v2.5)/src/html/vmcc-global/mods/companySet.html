@@ -1,0 +1,375 @@
+<section class="" id="section-companySet" v-cloak>
+    <div class="portlet">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject font-dark sbold uppercase">我的信息</span>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="user-info">
+                <div class="user-info-cell clearfix">
+                    <div class="pull-left user-info-cell-left">用户名</div>
+                    <div class="pull-left">{{userInfo.userName}}</div>
+                </div>
+                <div class="user-info-cell clearfix">
+                    <div class="pull-left user-info-cell-left">密码</div>
+                    <div class="pull-left text-grey">******</div>
+                    <div class="pull-left" @click="showChangePassWordView()"><a class="btn-link"
+                                                                                href="#ChangePwd">修改</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="portlet hidden">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject font-dark sbold uppercase">收款信息</span>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="user-info">
+                <div class="user-info-cell clearfix">
+                    <div class="pull-left user-info-cell-left">提款账号</div>
+                    <div class="pull-left">
+                        <div class="account-row">
+                            <div class="account-input editing">
+                                <i class="ico-account ico-account-alipay"></i><input type="text" class="form-control" autofocus="autofocus">
+                            </div>
+                            <span class="editAccount-actions"><a class="btn-link" href="">保存</a><a class="btn-link" href="">取消</a></span>
+
+                        </div>
+                        <div class="account-row">
+                            <div class="account-input">
+                                <i class="ico-account ico-account-wxpay"></i><input type="text" class="form-control" autofocus="autofocus">
+                            </div>
+                            <span class="editAccount-actions">
+                            <a class="btn-link" href="">修改</a>
+                                </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-info-cell clearfix">
+                    <div class="pull-left user-info-cell-left">提款密码</div>
+                    <div class="pull-left text-grey">******</div>
+                    <div class="pull-left" @click="showChangePassWordView()"><a class="btn-link"
+                                                                                href="#ChangePwd">修改</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="portlet">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject font-dark sbold uppercase">企业资料</span>
+            </div>
+            <div class="actions">
+                <button type="button" class="btn btn-primary" @click="modifyCompanySet(enterpriseDetail)">修改</button>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="user-info">
+                <div class="user-info-cell clearfix">
+                    <div class="pull-left user-info-cell-left">负责人</div>
+                    <div class="pull-left">{{enterpriseDetail.TENANT_MANAGER_NAME_}}</div>
+                </div>
+                <div class="user-info-cell clearfix">
+                    <div class="pull-left user-info-cell-left">负责人手机号</div>
+                    <div class="pull-left">{{enterpriseDetail.SECURITY_PHONE_}}</div>
+                </div>
+                <div class="user-info-cell clearfix">
+                    <div class="pull-left user-info-cell-left">企业名称</div>
+                    <div class="pull-left">{{enterpriseDetail.TENANT_NAME_}}</div>
+                </div>
+                <div class="user-info-cell clearfix">
+                    <div class="pull-left user-info-cell-left">企业联系地址</div>
+                    <div class="pull-left">{{enterpriseDetail.TENANT_DESC_}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="portlet">
+        <div class="portlet-title">
+            <div class="caption">
+                <span class="caption-subject font-dark sbold uppercase">企业成员</span>
+            </div>
+            <div class="actions">
+                <button type="button" class="btn btn-primary" @click="visitMemberButton">邀请成员</button>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="member">
+                <table class="table-member">
+                    <thead>
+                    <tr>
+                        <!--<th>微信号</th>-->
+                        <th>昵称</th>
+                        <!--<th>权限范围</th>-->
+                        <th>角色</th>
+                        <th>时间</th>
+                        <!--<th>状态</th>-->
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="account in accountList" v-if="account.TENANT_ROLES != 'TenantAdmin'">
+                        <td>{{account.REMARK_}}</td>
+                        <td>{{account.TENANT_ROLES}}</td>
+                        <td>{{account.CREATE_TIME_}}</td>
+                        <!--<td>-->
+                        <!--{{account.}}-->
+                        <!--</td>-->
+                        <!--<td>-->
+                        <!--<div>角色一</div>-->
+                        <!--<div>角色二</div>-->
+                        <!--<div>角色三</div>-->
+                        <!--</td>-->
+                        <!--<td>已绑定</td>-->
+                        <td>
+                            <button class="btn btn-primary btn-sm" type="button" @click="deleteTenantRole(account)"
+                                    v-if="account.TENANT_ROLES != 'TenantAdmin'">删除
+                            </button>
+                            <button class="btn btn-primary btn-sm" type="button" @click="changeTenantRole(account)"
+                                    v-if="account.TENANT_ROLES != 'TenantAdmin'">编辑
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bs-modal-sm modal-scroll" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body">
+                    确定要禁用该用户吗？
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" data-toggle="confirmation"
+                            data-original-title="确定要禁用该用户吗？"> 确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bs-modal-sm modal-scroll" tabindex="-1" role="dialog" aria-hidden="true"
+         id="changeTenantRole">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">更改运营者角色</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="#" novalidate="novalidate">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label class="control-label">昵称</label>
+                                <div>
+                                    <input class="form-control" v-model="changeRole.REMARK_">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <!--<label>权限范围</label>-->
+                                <!--<div class="checkbox">-->
+                                <!--<label><input type="checkbox" value="">门店1</label>-->
+                                <!--</div>-->
+                                <!--<div class="checkbox">-->
+                                <!--<label><input type="checkbox" value="">门店2</label>-->
+                                <!--</div>-->
+                                <!--<div class="checkbox">-->
+                                <!--<label><input type="checkbox" value="">门店3</label>-->
+                                <!--</div>-->
+                            </div>
+                            <div class="form-group">
+                                <label>选择角色</label>
+                                <div class="checkbox">
+                                    <label><input id='changeAdmin' type="checkbox" value="Admin">Admin</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input id='changeOperator' type="checkbox" value="Operator">Operator</label>
+                                </div>
+                                <div class="checkbox">
+                                    <label><input id='changeFinance' type="checkbox" value="Finance">Finance</label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                    <button @click='submitChangeRole' type="submit" class="btn btn-primary" data-toggle="confirmation"
+                            data-original-title="确定要提交吗？">确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--<修改企业信息-->
+    <div class="modal fade bs-modal-sm modal-scroll" tabindex="-1" role="dialog" aria-hidden="" id="changeCompanyInfo">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">修改企业资料</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="#" novalidate="novalidate" role="form">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label class="control-label">负责人</label>
+                                <div>
+                                    <input type="text" placeholder="" class="form-control" name="name"
+                                           v-model="enterprise.TENANT_MANAGER_NAME_">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">负责人手机号</label>
+                                <div>
+                                    <input type="text" name="password" placeholder="" class="form-control"
+                                           v-model="enterprise.SECURITY_PHONE_">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">企业名称</label>
+                                <div>
+                                    <input type="password" placeholder="" class="form-control"
+                                           v-model="enterprise.TENANT_NAME_">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">企业联系地址</label>
+                                <div>
+                                    <textarea placeholder="" class="form-control"
+                                              v-model="enterprise.TENANT_DESC_"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                    <button @click="submitModifyEnterprise(enterprise)" type="submit" class="btn btn-primary"
+                            data-toggle="confirmation" data-original-title="确定要提交吗?">提交
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--邀请-->
+    <div class="modal fade bs-modal-sm modal-scroll" tabindex="-1" role="dialog" aria-hidden="true" id="visitMember">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">邀请运营者</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-body">
+                        <div class="form-group">
+                            <label class="control-label">请输入需邀请的运营者</label>
+                            <div class="input-group">
+                                <input id="findAccountParamsAccount" type="text" v-model="findAccountParams.account"
+                                       placeholder="请输入微信号/手机号/魔格账号" class="form-control" autocomplete="off"
+                                       @keyup.enter="findAccount">
+                                <span @click="findAccount" class="input-group-addon"><i class="fa fa-search"></i></span>
+                            </div>
+                            <div class="input-dropdown" id="findAccount">
+                                <ul class="oul">
+                                    <li @click="clickFindAccount(findAccount)" v-for="findAccount in findAccountList">
+                                        <img :src="findAccount.value" v-if="findAccount.value != 'null'"
+                                             class="member-avatar">
+                                        <img src='img/global/aizhi-logo.png' v-else class="member-avatar">
+                                        {{findAccount.userName}}
+                                    </li>
+                                </ul>
+                            </div>
+                            <div hidden>需先关注魔格生活公众号！</div>
+                        </div>
+                        <div class="form-group">
+                            <div class="control-label">备注</div>
+                            <!--<textarea></textarea>-->
+                            <input id="findAccountRemark" class="form-control" v-model="findAccountParams.remark">
+                        </div>
+                        <!--<div class="form-group">-->
+                        <!--<label>权限范围</label>-->
+                        <!--<div class="checkbox">-->
+                        <!--<label><input type="checkbox" value="">门店1</label>-->
+                        <!--</div>-->
+                        <!--<div class="checkbox">-->
+                        <!--<label><input type="checkbox" value="">门店2</label>-->
+                        <!--</div>-->
+                        <!--<div class="checkbox">-->
+                        <!--<label><input type="checkbox" value="">门店3</label>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <div class="form-group">
+                            <label>选择角色</label>
+                            <div class="checkbox">
+                                <label><input id='Admin' type="checkbox" value="Admin">Admin</label>
+                            </div>
+                            <div class="checkbox">
+                                <label><input id='Operator' type="checkbox" value="Operator">Operator</label>
+                            </div>
+                            <div class="checkbox">
+                                <label><input id='Finance' type="checkbox" value="Finance">Finance</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" data-toggle="confirmation"
+                            data-original-title="确定要发送邀请吗？"
+                            @click="visitmember">发送邀请
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--修改密码-->
+
+    <div class="modal fade bs-modal-sm modal-scroll" id="changeAccountPassword" tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">修改密码</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="#" novalidate="novalidate">
+                        <div class="form-body">
+                            <div class="form-group form-inline-custom clearfix">
+                                <label class="control-label">手机号</label>
+                                <input type="text" v-model="userInfo.bindPhone" class="form-control input-telphone"
+                                       readonly>
+                            </div>
+
+                            <div class="form-group form-inline-custom clearfix">
+                                <label class="control-label">验证码</label>
+                                <span><input v-model="userInfo.vcode" type="text" class="form-control"></span>
+                                <button type="button" class="btn btn-primary" @click="getVcode()">发送验证码</button>
+                            </div>
+                            <div class="form-group form-inline-custom clearfix">
+                                <label class="control-label">新密码</label>
+                                <input type="password" placeholder="请输入新密码" class="form-control"
+                                       v-model="userInfo.newPasswd">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                    <button type="submit" @click="submitChangePassword()" class="btn btn-primary"
+                            data-toggle="confirmation" data-original-title="确定要提交吗?">提交
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>

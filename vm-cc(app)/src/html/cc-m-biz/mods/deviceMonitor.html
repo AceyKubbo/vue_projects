@@ -1,0 +1,54 @@
+<section id="section-deviceMonitor" class="hidden" v-cloak>
+    <div class="page-head bg-gradient">
+        <a @click="returnHome" class="back"><span class="ico ico-back"></span></a>
+        <div class="title">缺货查询</div>
+        <div class="page-head-right">
+            <button type="button" class="btn-head" @click="shortageCount">缺货统计</button>
+        </div>
+    </div>
+    <div class="page-content">
+        <div class="card">
+            <div class="weui-flex realtime-data">
+                <div class="weui-flex__item">
+                    <h1>设备状态</h1>
+                    <div class="realtime-data-body">在线：{{monitorData.device_online}}</div>
+                    <div class="realtime-data-body">离线：{{monitorData.device_offline}}</div>
+                </div>
+                <div class="weui-flex__item">
+                    <h1>货道状态</h1>
+                    <div class="realtime-data-body">正常：{{monitorData.all_using_aisle}}</div>
+                    <div class="realtime-data-body">缺货：{{monitorData.all_using_short_aisle}}</div>
+                </div>
+                <div class="weui-flex__item">
+                    <h1>商品统计</h1>
+                    <div class="realtime-data-body">在售：{{monitorData.all_goods_count}}</div>
+                    <div class="realtime-data-body">缺货：{{monitorData.all_goods_short_count}}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="weui-cells vmcc-cells mt-0">
+            <a @click="showDeviceDetail(device)" class="weui-cell weui-cell_access" href="javascript:;" v-for="device in deviceList">
+                <div class="weui-cell__hd">
+                     <span class="network"><img src="img/cc-m-biz/online.png" >
+                         <!--<img src="img/online.png" v-if="device.CONTECTED_ == '1'">--><!--<img src="img/offline.png" v-if="device.CONTECTED_ == '0'">--></span>
+                </div>
+                <div class="weui-cell__bd">
+                   <div>
+                       <span class="font-md inline-block font-bold">{{device.COUNTER_NAME_}}</span>
+                       <span class="font-xs font-gray inline-block">{{device.COUNTER_DEVICE_CODE_}}</span>
+                   </div>
+                    <div class="data font-sm">
+                        <div class="inline-block">全部<span class="font-bold">（{{device.COUNT_}}）</span></div>
+                        <div class="inline-block">缺货<span class="font-bold font-red">（{{device.SHORT_COUNT_}}）</span></div>
+                    </div>
+                </div>
+                <div class="weui-cell__ft"></div>
+            </a>
+        </div>
+        <div class="weui-loadmore" id="deviceLoadmoreScroll" hidden>
+            <i class="weui-loading"></i>
+            <span class="weui-loadmore__tips">正在加载</span>
+        </div>
+    </div>
+</section>

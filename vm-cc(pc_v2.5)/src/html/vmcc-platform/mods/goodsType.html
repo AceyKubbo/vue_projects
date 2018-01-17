@@ -1,0 +1,100 @@
+<!-- BEGIN CONTENT -->
+<section class="page-content-wrapper hidden" id="section-goodsType" v-cloak>
+    <div class="page-head">
+        <div class="page-title">
+            <div class="caption">
+                <span>商品分类</span>
+            </div>
+        </div>
+        <div class="page-actions">
+            <button type="button" class="btn btn-primary" @click="addType" data-toggle="modal">添加分类</button>
+        </div>
+    </div>
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <!-- BEGIN PAGE BASE CONTENT -->
+        <div class="portlet light bordered vmui-portlet">
+            <!--<div class="portlet-title">-->
+                <!--<div class="caption">-->
+                    <!--<span class="caption-subject font-dark sbold uppercase">商品分类</span>-->
+                <!--</div>-->
+                <!--<div class="actions">-->
+                    <!--<button type="button" class="btn btn-primary" @click="addType"-->
+                            <!--data-toggle="modal">添加分类-->
+                    <!--</button>-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="portlet-body">
+                <div class="table-scrollable table-scrollable-borderless">
+                    <table class="table table-light">
+                        <thead>
+                        <tr>
+                            <th>分类名称</th>
+                            <th>备注</th>
+                            <th width="40%">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <template v-for="type in goodTypeList">
+                            <tr @click="showAddBtn" :id="'type-'+type.ID_">
+                                <td >
+                                    <i class="fa fa-plus-square-o"  @click="showSonType(type)" :id="'icon-'+type.ID_"></i>
+                                    <!--<i class="fa fa-minus-square-o" @click="hideSonType" style="display: none"></i>-->
+                                            <span class="table-editable-form-1">
+                                                    <input v-if="type.editable" type="text" class="form-control" v-model="type.TYPE_NAME_" >
+                                                    <span v-else >{{type.TYPE_NAME_}}</span>
+                                                </span>
+                                </td>
+                                <td>
+                                    <textarea v-if="type.editable" class="form-control input-medium" rows="2" v-model="type.REMARK_"></textarea>
+                                    <span v-else >{{type.REMARK_}}</span>
+                                </td>
+                                <td >
+                                    <a class="btn btn-circle btn-primary btn-xs" v-if="!type.editable"
+                                       href="#" @click="editType(type)" >修改</a>
+                                    <a class="btn btn-circle red-mint btn-xs" v-if="!type.editable"
+                                       href="#" @click="deleteType(type)">删除</a>
+                                    <a class="btn btn-circle btn-primary btn-xs" v-if="type.editable"
+                                       href="#" @click="saveType(type)">保存</a>
+                                    <a class="btn btn-circle default btn-xs" v-if="type.editable"
+                                       href="#" @click="cancelType(type)">取消</a>
+                                    <a class="btn btn-circle dark btn-xs " name="addType" style="display: none" @click="addType(type)"
+                                       href="#">添加同级</a>
+                                    <a class="btn btn-circle dark btn-xs " name="addType" style="display: none" @click="addSonType(type)"
+                                       href="#">添加子类</a>
+                                </td>
+                            </tr>
+                            <tr class="child" :name="'type-son-'+type.ID_" v-for="son in type.children" style="display: none">
+                                <td>
+                                    <i class="ico-sort"></i>
+                                            <span class="table-editable-form-1">
+                                                    <input v-if="son.editable" type="text" class="form-control" v-model="son.TYPE_NAME_" >
+                                                    <span v-else >{{son.TYPE_NAME_}}</span>
+                                                </span>
+                                </td>
+                                <td>
+                                    <textarea v-if="son.editable" class="form-control input-medium" rows="2" v-model="son.REMARK_"></textarea>
+                                    <span v-else >{{son.REMARK_}}</span>
+                                </td>
+                                <td>
+                                    <a class="btn btn-circle btn-primary  btn-xs" v-if="!son.editable"
+                                       href="#" @click="editType(son)" >修改</a>
+                                    <a class="btn btn-circle btn-outline red-mint btn-xs" v-if="!son.editable"
+                                       href="#" @click="deleteType(son)">删除</a>
+                                    <a class="btn btn-outline btn-circle btn-primary btn-xs" v-if="son.editable"
+                                       href="#" @click="saveType(son)">保存</a>
+                                    <a class="btn btn-outline btn-circle default btn-xs" v-if="son.editable"
+                                       href="#" @click="cancelType(son)">取消</a>
+                                </td>
+                            </tr>
+                        </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END PAGE BASE CONTENT -->
+    </div>
+    <!-- END CONTENT BODY -->
+</section>
+<!-- END CONTENT -->

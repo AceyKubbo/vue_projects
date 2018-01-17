@@ -1,0 +1,114 @@
+<!-- BEGIN CONTENT -->
+<section class="page-content-wrapper hidden" id="section-deliveryRecord" v-cloak>
+    <div class="page-head">
+        <div class="page-title">
+            <div class="caption">
+                <span>送货记录</span>
+            </div>
+        </div>
+        <!--<div class="page-actions">-->
+            <!--<button type="button" class="btn dark">导出excel</button>-->
+        <!--</div>-->
+    </div>
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <!-- BEGIN PAGE BASE CONTENT -->
+        <div class="portlet light bordered vmui-portlet">
+            <!--<div class="portlet-title" >-->
+                <!--<div class="caption">-->
+                    <!--<span class="caption-subject font-dark sbold uppercase">送货记录</span>-->
+                <!--</div>-->
+                <!--&lt;!&ndash;<div class="actions">&ndash;&gt;-->
+                <!--&lt;!&ndash;<button type="button" class="btn dark">导出excel</button>&ndash;&gt;-->
+                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+            <!--</div>-->
+            <div class="portlet-body">
+                <div class="search-bar-quick clearfix" id="accurateSearch">
+                    <div class="form-group">
+                        <label class="control-label">送货时间</label>
+                        <div class="td-date-container">
+                            <div class="input-group input-daterange" >
+                                <picker ref="startTime" :date="params.startTime" @refresh="searchDelivery"></picker>
+                                <span class="input-group-addon">到</span>
+                                <picker ref="endTime" :date="params.endTime" @refresh="searchDelivery"></picker>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">送货状态</label>
+                        <select class="form-control input-small" v-model="params.stauts" @change="searchDelivery">
+                            <option value="">全部</option>
+                            <option value="1">待配送</option>
+                            <option value="3">配送中</option>
+                            <option value="4">已完成</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">送货人</label>
+                        <input  type="text" class="form-control input-medium" v-model="params.deliver" @key.enter="searchDelivery"  placeholder="输入送货人姓名">
+                    </div>
+                    <div class="form-actions">
+                        <label class="control-label"><button type="submit" @click="searchDelivery" class="btn btn-primary">查询</button></label>
+                    </div>
+                </div>
+
+                <!--送货记录列表-->
+                <div class="table-scrollable table-scrollable-borderless table-hasPadding2">
+                    <table class="table table-hover table-light">
+                        <thead>
+                        <tr>
+                            <th>收货人</th>
+                            <th>送货状态</th>
+                            <th>送货人</th>
+                            <th>送货商品</th>
+                            <th>送货时间</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="record in deliveryList">
+                            <td>{{record.consignee}}</td>
+                            <td>
+                                <span class="font-red" v-if="record.stauts == '1'">{{record.stauts_label}}</span>
+                                <span class="font-blue" v-if="record.stauts == '3'">{{record.stauts_label}}</span>
+                                <span class="font-dark" v-if="record.stauts == '4'">{{record.stauts_label}}</span>
+                            </td>
+                            <td>{{record.deliveryMan}}</td>
+                            <td>
+                                <div v-for="detail in record.DeliveryNoteDetail">{{detail.goodsName}} <span class="bold">x{{detail.goodsCount}}</span></div>
+                            </td>
+                            <td>
+                                <div>{{record.send_time}}</div>
+                            </td>
+                        </tr>
+                        <!--<tr>-->
+                        <!--<td>杭州雨忆晴酒店8506号房间</td>-->
+                        <!--<td>落日楼台</td>-->
+                        <!--<td>-->
+                        <!--<div>农夫山泉 <span class="bold">×5</span></div>-->
+                        <!--<div>合味道海鲜面 <span class="bold">×5</span></div>-->
+                        <!--</td>-->
+                        <!--<td>-->
+                        <!--<div>2017-09-23 18:56:23</div>-->
+                        <!--</td>-->
+                        <!--</tr>-->
+                        </tbody>
+                    </table>
+                    <!--<div class="more-wrapper text-center" >-->
+                    <!--<div class="data-null" v-if="TotalCount==RecordCount">-->
+                    <!--<p class="text-center">无更多数据</p>-->
+                    <!--</div>-->
+                    <!--<div class="loading_more" v-else>-->
+                    <!--<button type="button" @click="loadMore()" class="btn default btn-outline">加载更多</button>-->
+                    <!--</div>-->
+                    <!--<div class="number_datas" >已显示 <b>{{RecordCount}}</b> 条/共 <b>{{TotalCount}}</b> 条</div>-->
+                    <!--</div>-->
+                </div>
+                <page ref="pageInit" :page="pageConfig" @loader="pageLoader()"></page>
+            </div>
+            <!-- End: life time stats -->
+        </div>
+    </div>
+    <!-- END PAGE BASE CONTENT -->
+    <!-- END CONTENT BODY -->
+</section>
+<!-- END CONTENT -->

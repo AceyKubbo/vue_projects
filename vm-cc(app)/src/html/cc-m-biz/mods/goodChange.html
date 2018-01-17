@@ -1,0 +1,32 @@
+<section id="section-goodsChange" class="hidden" v-cloak>
+    <div class="page-head bg-gradient">
+        <a @click="back" class="back" href="#"><i class="ico-back"></i></a>
+        <div class="title">{{passwayInfo.COUNTER_NAME_}}-货道[{{passwayInfo.PLACE_NUM_}}]</div>
+    </div>
+    <div class="page-content">
+        <div class="search-bar clearfix">
+            <div class="search-box clearfix">
+                <input type="text" v-model="params.search_condition" placeholder="按商品名称或者商品编号搜索" @keyup="search">
+                <a href="#" v-if="params.search_condition" class="clear-search" @click="clearCondition"></a>
+                <!--<button type="button" class="btn-search" @click="search">搜索</button>-->
+            </div>
+
+        </div>
+        <div class="weui-cells vmcc-cells mt-0">
+            <div class="weui-cell" v-for="good in goodList"  @click="submitPassway(good)">
+                <div class="weui-cell__hd">
+                    <div class="goods-img-box"><img :src="good.PICTURE_" class="goods-img"></div>
+                </div>
+                <div class="weui-cell__bd">
+                    <div class="font-md">{{good.NAME_}}</div>
+                    <div class="font-xs">{{good.CODE_}}</div>
+                </div>
+                <div class="weui-cell__ft">
+                    <a href="#" class="btn btn-link">选择</a>
+                </div>
+                <div v-if="good.CODE_==passwayInfo.CODE_" class="current"></div>
+            </div>
+        </div>
+
+    </div>
+</section>

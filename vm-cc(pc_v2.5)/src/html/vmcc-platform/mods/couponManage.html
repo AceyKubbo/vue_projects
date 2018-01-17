@@ -1,0 +1,204 @@
+<!-- BEGIN CONTENT -->
+<section class="page-content-wrapper hidden">
+    <div class="page-head">
+        <div class="page-title">
+            <div class="caption">
+                <span>优惠劵管理</span>
+            </div>
+        </div>
+        <div class="page-actions">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#deliveryId"
+                    @click="addDelivery">创建优惠劵
+            </button>
+        </div>
+    </div>
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <!-- BEGIN PAGE BASE CONTENT -->
+        <div class="portlet light bordered vmui-portlet">
+            <div class="portlet-body">
+                <div class="search-bar-quick clearfix">
+                    <div class="form-group">
+                        <label class="control-label">名称</label>
+                        <input type="text" class="form-control input-medium" placeholder="按优惠劵名称搜索">
+                    </div>
+                    <!--<div class="form-group">-->
+                    <!--<label class="control-label">类型</label>-->
+                    <!--<select class="form-control input-small">-->
+                    <!--<option value="">全部</option>-->
+                    <!--<option value="">一</option>-->
+                    <!--<option value="">二</option>-->
+                    <!--<option value="">三</option>-->
+                    <!--</select>-->
+                    <!--</div>-->
+                    <div class="form-actions">
+                        <label class="control-label">
+                            <button type="submit" class="btn btn-primary" @click="searchDelivery">查询</button>
+                        </label>
+                    </div>
+                </div>
+                <div class="table-scrollable table-scrollable-borderless table-hasPadding2">
+                    <table class="table table-light table-hover">
+                        <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>金额</th>
+                            <th>有效期</th>
+                            <th>备注</th>
+                            <th>生成时间</th>
+                            <th>发行量</th>
+                            <th>可使用门店</th>
+                            <th>可使用商品</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>2元抵用劵</td>
+                            <td>￥5.00</td>
+                            <td>2018-01-01 00:00:00-2018-01-02 00:00:00</td>
+                            <td>2元抵用劵</td>
+                            <td>2017-12-29 14:23:00</td>
+                            <td>5000</td>
+                            <td>不限</td>
+                            <td>不限</td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-xs btn-circle">修改</button>
+                                <button type="button" class="btn btn-warning btn-xs btn-circle">禁用</button>
+                                <button type="button" class="btn btn-primary btn-xs btn-circle">分发</button>
+                                <button type="button" class="btn btn-default btn-xs btn-circle">统计</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <page ref="pageInit" :page="pageConfig" @loader="pageLoader()"></page>
+            </div>
+        </div>
+        <!-- END PAGE BASE CONTENT -->
+    </div>
+    <!-- END CONTENT BODY -->
+    <!-- END CONTENT -->
+
+    <!-- BEGIN 创建优惠劵 -->
+    <div class="modal fade bs-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">创建优惠劵</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-3">名称</label>
+                            <div class="col-md-4">
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-3">金额</label>
+                            <div class="col-md-4">
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-3">有效期</label>
+                            <div class="col-md-9">
+                                <div class="td-date-container">
+                                    <div class="input-group input-daterange"><input type="text" class="form-control form_datetime">
+                                        <span class="input-group-addon">到</span> <input type="text" class="form-control form_datetime">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-3">下发类型</label>
+                            <div class="col-md-4">
+                                <select class="form-control">
+                                    <option value="0">不可领用不可发放</option>
+                                    <option value="1">领用</option>
+                                    <option value="2">发放</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-3">可使用门店</label>
+                            <div class="col-md-4">
+                                <label><input type="radio">不限</label>
+                                <div>
+                                    <a data-toggle="modal" data-target="#deliverySelectGoods" class="btn btn-primary">选择商品 <i class="fa fa fa-plus"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-3">可使用商品</label>
+                            <div class="col-md-4">
+                                <label><input type="radio">随机</label>
+                                <label><input type="radio">不限</label>
+                                <label><input type="radio">仅限原价商品</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" @click="submitDelivery(deliveryDetail)">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--END 创建送货单 -->
+
+    <!-- BEGIN 选择商品 modal -->
+    <div class="modal fade bs-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true"></button>
+                    <h4 class="modal-title">添加商品</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="search-bar-accurate clearfix">
+                        <div class="form-group">
+                            <label class="control-label">商品</label>
+                            <input type="text" class="form-control input-medium" placeholder="输入商品名称或者商品编号"
+                                   v-model="params.good_condi" @keyup="searchGoodList">
+                        </div>
+                    </div>
+                    <div class="table-scrollable table-scrollable-borderless scrollable-y">
+                        <table class="table table-hover table-light passageTable">
+                            <tbody>
+                            <tr v-for="good in goodList">
+                                <td>
+                                    <dl class="goods-data">
+                                        <dt><img :src="good.PICTURE_" class="img_goods_sm"></dt>
+                                        <dd>
+                                            <div>{{good.NAME_}}</div>
+                                            <div class="font-grey-silver font-sm">{{good.CODE_}}</div>
+                                        </dd>
+                                    </dl>
+                                </td>
+                                <td>
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        <input type="checkbox" :value="good" v-model="checkboxGoodList"/>
+                                        <span></span>
+                                    </label>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" @click="submitDeliveryGoodList">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END 选择商品 modal -->
+</section>
+
+

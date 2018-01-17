@@ -1,0 +1,42 @@
+<section id="section-shortage-details" class="hidden" v-cloak>
+    <div class="page-head bg-gradient">
+        <a @click="back" class="back"><span class="ico ico-back"></span></a>
+        <div class="title">缺货详情</div>
+    </div>
+    <div class="page-content">
+        <div class="weui-cells mt-0">
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    <div class="goods-img-box">
+                        <img :src="goodInfo.PICTURE_" class="goods-img">
+                    </div>
+                </div>
+                <div class="weui-cell__bd">
+                    <div>
+                        <span class="font-md font-bold">{{goodInfo.NAME_}}</span>
+                        <span class="font-xs font-grayer">{{goodInfo.CODE_}}</span>
+                    </div>
+                    <div class="font-sm font-gray">缺货量：<span class="font-bold font-black font-lg">{{goodInfo.SHORT_COUNT_}}</span></div>
+                </div>
+                <div class="weui-cell__ft"></div>
+            </div>
+        </div>
+
+        <div class="weui-cells vmcc-cells mt-0">
+            <div class="weui-cell" v-for="aisle in aisleList">
+                <div class="weui-cell__bd">
+                    <div class="font-md font-bold">{{aisle.COUNTER_NAME_}}</div>
+                    <div class="font-sm font-grayer">{{aisle.COUNTER_SN_}}</div>
+                    <!--<div class="eq-address">{{aisle.DEVICE_ID_ADDR}}</div>-->
+                </div>
+                <div class="weui-cell__bd">
+                    <div class="font-sm font-gray text-center"><div class="font-bold font-black font-lg text-center">{{aisle.PLACE_NUM_}}</div>货道</div>
+                </div>
+                <div class="weui-cell__ft">
+                    <div class="font-sm font-gray text-center"><div class="font-bold font-black font-lg text-center">{{aisle.SHORT_COUNT_}}</div>缺货量</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>

@@ -1,0 +1,231 @@
+<!-- BEGIN CONTENT -->
+<section class="page-content-wrapper hidden" id="section-salesRecord">
+    <div class="page-head">
+        <div class="page-title">
+            <div class="caption">
+                <span>销售记录</span>
+            </div>
+        </div>
+        <div class="page-actions">
+            <button type="button" class="btn dark" @click="excelExport">导出Excel</button>
+        </div>
+    </div>
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <!-- BEGIN PAGE BASE CONTENT -->
+        <div class="portlet light bordered vmui-portlet">
+            <div class="portlet-body">
+                <div class="tabbable-line">
+                    <!-- tab -->
+                    <ul class="nav nav-tabs" id="SalesRecordTab">
+                        <li>
+                            <a  data-toggle="tab" href="#" @click="change('all')">全部</a>
+                        </li>
+                        <li class="active">
+                            <a  data-toggle="tab" href="#" @click="change('normal')">正常记录</a>
+                        </li>
+                        <li>
+                            <a  data-toggle="tab" href="#" @click="change('abnormal')">异常记录</a>
+                        </li>
+                        <!--<li>-->
+                        <!--<a href="#" @click="change('noToPay')" data-toggle="tab">未支付</a>-->
+                        <!--</li>-->
+                        <li>
+                            <a  data-toggle="tab" href="#" @click="change('refund')">已退款</a>
+                        </li>
+                        <li>
+                            <a  data-toggle="tab" href="#" @click="change('renew')">异常恢复</a>
+                        </li>
+                    </ul>
+                    <!-- 搜索 -->
+                    <div class="search-bar-quick clearfix" id="SalesRecordSearchForm">
+                        <div class="form-group">
+                            <label class="control-label">销售时间</label>
+                            <div class="td-date-container">
+                                <div class="input-group input-daterange">
+                                    <picker ref="start_time" :date="params.startTime" @refresh="pageLoader()"></picker>
+                                    <span class="input-group-addon">到</span>
+                                    <picker ref="end_time" :date="params.endTime" @refresh="pageLoader()"></picker>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">支付方式</label>
+                            <select class="form-control input-small" v-model="channel"
+                                    @change="pageLoader()">
+                                <option value="">全部</option>
+                                <option value="wx_pub">微信支付</option>
+                                <option value="alipay_wap">支付宝</option>
+                                <option value="cash">现金支付</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">配送状态</label>
+                            <select class="form-control input-small" v-model="pickupStatus"
+                                    @change="pageLoader()">
+                                <option value="">全部</option>
+                                <option value="1">初始化</option>
+                                <option value="2">出货中</option>
+                                <option value="3">出货成功</option>
+                                <option value="4">出货异常</option>
+                                <option value="5">异常恢复</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">支付单号</label>
+                            <input type="text" v-model="orderNo" class="form-control input-medium" placeholder="输入支付单号">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">商品</label>
+                            <input v-model="goodsName" type="text" class="form-control input-medium" placeholder="请输入商品名称或编号 " @keyup.enter="pageLoader()">
+                        </div>
+                        <div class="form-actions">
+                            <label class="control-label">
+                                <button type="button" @click="pageLoader()" class="btn btn-primary">查询</button>
+                            </label>
+                        </div>
+                    </div>
+                    <!-- 销售列表 -->
+                    <div class="tab-content" id="SalesRecordGrid">
+                        <div class="tab-pane active">
+                            <div class="table-scrollable table-scrollable-borderless table-hasPadding">
+                                <table class="table table-hover table-light">
+                                    <thead>
+                                    <tr>
+                                        <th width="30%">订单名称</th>
+                                        <th width="10%">金额</th>
+                                        <th width="10%">支付方式</th>
+                                        <th width="10%">支付状态</th>
+                                        <th width="15%">支付时间</th>
+                                        <th width="25">支付单号</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody >
+                                    <template v-if="orderList" v-for="sale in orderList">
+                                        <tr @click="showOrderDetail(sale)">
+                                            <td>{{sale.ORDER_SUBJECT_}}</td>
+                                            <td><span class="bold">￥{{sale.PAY_AMOUNT_LABEL}}</span></td>
+                                            <td>{{sale.PAY_CHANNEL_LABEL}}</td>
+                                            <td><span class="font-blue">{{sale.PAY_STATUS_LABEL}}</span></td>
+                                            <td>{{sale.CREATE_TIME_}}</td>
+                                            <td>{{sale.ORDER_NO_}}</td>
+                                        </tr>
+                                        <tr class="hideCell hidden" :id="'detail-'+sale.ID_" >
+                                            <td colspan="6" class="hideCell-row">
+                                                <table class="table table-light table-hover table-child">
+                                                    <tbody >
+                                                    <tr v-for="orderDetail in orderDetailList">
+                                                        <td width="40%">
+                                                            <span v-if="orderDetail.DELIVERY_TYPE_=='1'" class="font-red">[{{orderDetail.DELIVERY_TYPE_LABEL}}]</span>
+                                                            <span v-else class="font-blue">[{{orderDetail.DELIVERY_TYPE_LABEL}}]</span>
+                                                            {{orderDetail.GOODS_NAME_LABEL}}
+                                                        </td>
+
+                                                        <td width="15%">{{orderDetail.COUNT_}}X{{orderDetail.PRICE}}</td>
+                                                        <td width="10%"><span class="bold">￥{{orderDetail.PRICE_LABEL}}</span></td>
+                                                        <td width="10">{{orderDetail.STATUS_LABEL}}</td>
+                                                        <td width="25%"><button type="button" href="#SaleRecordRefundForm" data-toggle="modal" @click="selectRefund(orderDetail)" class="btn btn-primary btn-xs"  v-if="orderDetail.canRefund">退款</button>
+                                                            <span class="bold font-red"  v-if="orderDetail.REFUND_STATUS_==2" >已退款</span>
+                                                            <span>{{orderDetail.REFUND_STATUS_LABEL}}</span>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    <template v-else>
+                                        <div  class="loading-custom">
+                                            <img src="img/global/loading.gif" class="img-loading">
+                                        </div>
+                                    </template>
+                                    </tbody>
+                                    <!--<tfoot>-->
+                                    <!--<tr>-->
+                                        <!--<th width="30%">合计:</th>-->
+                                        <!--<th width="10%"><span class="font-red">{{sumColumn.SUM_PAY_AMOUNT_LABEL}}</span></th>-->
+                                        <!--<th width="10%"></th>-->
+                                        <!--<th width="10%"></th>-->
+                                        <!--<th width="15%"></th>-->
+                                        <!--<th width="25"></th>-->
+                                    <!--</tr>-->
+                                    <!--</tfoot>-->
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bottom-total">
+                        <table class="table">
+                            <tfoot>
+                            <tr>
+                                <td>合计：</td>
+                                <td>
+                                    <span class="font-sm font-grey-silver">销售额</span>
+                                    <span class="bold">{{sumColumn.SUM_PAY_AMOUNT_LABEL}}</span>
+                                </td>
+                                <!--<td>-->
+                                <!--<span class="font-sm font-grey-silver">订单数</span>-->
+                                <!--<span class="bold">25</span>-->
+                                <!--</td>-->
+                                <!--<td>-->
+                                <!--<span class="font-sm font-grey-silver">商品销量</span>-->
+                                <!--<span class="bold">30</span>-->
+                                <!--</td>-->
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- 数据分页 -->
+                    <page ref="pageInit" :page="pageConfig" @loader="pageLoader()"></page>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END PAGE BASE CONTENT -->
+    <!-- BEGIN 退款 modal -->
+    <div class="modal fade bs-modal-lg modal-scroll" id="SaleRecordRefundForm"
+         tabindex="-1" role="dialog"
+         aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true"></button>
+                    <h4 class="modal-title">退款单</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-3">退款商品</label>
+                            <div class="col-md-7">
+                                <dl class="goods-data">
+                                    <dt><img :src="refundOrderDetail.PICTURE_" class="img_goods_sm"></dt>
+                                    <dd><div>{{refundOrderDetail.GOODS_NAME_}} </div> <div class="font-grey-silver font-sm">{{refundOrderDetail.GOODS_CODE_}}</div></dd>
+                                </dl>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-3 control-label">退款金额</label>
+                            <div class="col-md-6">￥{{refundOrderDetail.PRICE_LABEL}}</div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-md-3 control-label">退款原因</label>
+                            <div class="col-md-7">
+                                <textarea class="form-control"  v-model="refundOrderDetail.REFUND_REMARK_"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" @click="submitRefund()">确定</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- END 退款 modal -->
+</section>
+<!-- END CONTENT -->

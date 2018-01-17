@@ -1,0 +1,53 @@
+<section id="section-salesStatistics" class="hidden" v-cloak>
+    <div class="page-head bg-gradient">
+        <a @click="returnHome" class="back"><span class="ico ico-back"></span></a>
+        <div class="title">销售统计</div>
+    </div>
+
+    <div class="content">
+        <div class="screen-bar">
+            <button class="btn-white" @click="todayStatistic">今日</button>
+            <button class="btn-white" @click="yesterdayStatistic">昨日</button>
+            <input class="form-control" type="text" id="firstDatetimePicker"> 至 <input class="form-control" type="text" id="lastDatetimePicker">
+            <button class="btn-search" @click="search"></button>
+        </div>
+        <div class="weui-flex table-simulated-total">
+            <div class="weui-flex__item table-simulated-grid">合计</div>
+            <div class="weui-flex__item">{{goodsSaleTotal.goodsSaleStatProductCount}}</div>
+            <div class="weui-flex__item">￥{{goodsSaleTotal.goodsSaleStatPayCount}}</div>
+            <div class="weui-flex__item">￥{{goodsSaleTotal.goodsSaleStatSaleSprofit}}</div>
+        </div>
+        <div class="table-simulated">
+            <div class="weui-flex table-simulated-head">
+                <div class="weui-flex__item table-simulated-grid">设备</div>
+                <div class="weui-flex__item">销售数量</div>
+                <div class="weui-flex__item">销售金额</div>
+                <div class="weui-flex__item">销售利润</div>
+            </div>
+            <div class="weui-flex table-simulated-row" v-for="goodsSaleStat in goodsSaleStatList">
+                <div class="weui-flex__item table-simulated-grid">{{goodsSaleStat.MERCHANT_NUM_}}</div>
+                <div class="weui-flex__item">{{goodsSaleStat.PRODUCT_COUNT_}}</div>
+                <div class="weui-flex__item">{{goodsSaleStat.PAY_COUNT_}}</div>
+                <div class="weui-flex__item">{{goodsSaleStat.SaleSprofit}}</div>
+            </div>
+            <!--<div class="weui-flex table-simulated-row">-->
+                <!--<div class="weui-flex__item table-simulated-grid">江晖大厦13楼综合机</div>-->
+                <!--<div class="weui-flex__item">1245</div>-->
+                <!--<div class="weui-flex__item">￥154121.00</div>-->
+                <!--<div class="weui-flex__item">￥1524652.00</div>-->
+            <!--</div>-->
+            <!--<div class="weui-flex table-simulated-row">-->
+                <!--<div class="weui-flex__item table-simulated-grid">江晖大厦13楼综合机</div>-->
+                <!--<div class="weui-flex__item">1245</div>-->
+                <!--<div class="weui-flex__item">￥154121.00</div>-->
+                <!--<div class="weui-flex__item">￥1524652.00</div>-->
+            <!--</div>-->
+        </div>
+    </div>
+    <div id="" class="weui-popup__container popup-bottom">
+        <div class="weui-popup__overlay"></div>
+        <div class="weui-popup__modal">
+            你的内容放在这里...
+        </div>
+    </div>
+</section>

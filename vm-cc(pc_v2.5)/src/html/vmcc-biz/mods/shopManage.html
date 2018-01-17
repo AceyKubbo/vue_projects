@@ -1,0 +1,312 @@
+<!-- BEGIN CONTENT -->
+<section class="page-content-wrapper hidden" id="section-shopManage">
+    <div class="page-head">
+        <div class="page-title">
+            <div class="caption">
+                <span>商城管理</span>
+            </div>
+        </div>
+        <!--<div class="page-actions">-->
+            <!--<button type="button" class="btn btn-primary" data-toggle="modal" @click="addGood">添加商品-->
+            <!--</button>-->
+        <!--</div>-->
+    </div>
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <!-- BEGIN PAGE BASE CONTENT -->
+        <div class="portlet light bordered vmui-portlet">
+            <div class="portlet-body">
+                <div class="cupboard-info">
+                    <div class="cupboard-info-content">
+                        <ul class="editableInfo">
+                            <li class="clearfix">
+                                <span class="editableTitle pull-left">商城名称</span>
+                                        <span class="editableValue pull-left">
+                                            <input type="text" class="form-control hidden" v-model="shopInfo.NAME_" id="modifyShow">
+                                            <span class="editableText" id="keepShow">{{shopInfo.NAME_}}</span>
+                                        </span>
+                                <span class="editableActions pull-left"><button class="btn btn-primary btn-sm" @click="editType(shopInfo)" id="modify">修改</button><button class="btn btn-primary btn-sm hidden" id="keepModify" @click="keepModifyShopName(shopInfo)">保存</button></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="cupboard-cell">
+                    <div class="cupboard-head clearfix">
+                        <div class="caption">
+                            <span class="caption-subject font-dark sbold uppercase">商品设置</span>
+                        </div>
+                        <div class="actions" @click="showAddGoods">
+                            <button type="button" href="#" class="btn btn-primary btn-sm" data-toggle="modal" >添加商品
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-scrollable table-scrollable-borderless">
+                        <table class="table table-hover table-light passageTable">
+                            <thead>
+                            <tr>
+                                <!--<th></th>-->
+                                <th>商品</th>
+                                <th>价格(¥)</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="shopGood in shopGoodList">
+                                <td>
+                                    <dl class="goods-data">
+                                        <dt><img :src="shopGood.PICTURE_" class="img_goods_sm"></dt>
+                                        <dd>
+                                            <div>{{shopGood.NAME_}}</div>
+                                            <div class="font-grey-silver font-sm">
+                                                {{shopGood.CODE_}}
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                </td>
+                                <td>
+                                    <ul class="payList">
+                                        <li><span class="spl">现金支付</span><span class="spr">￥ {{shopGood.CASH_PRICE_LABEL}}</span> </li>
+                                        <li><span class="spl">支付宝</span><span class="spr">￥ {{shopGood.ALI_PRICE_LABEL}}</span> </li>
+                                        <li><span class="spl">微信支付</span><span class="spr">￥ {{shopGood.WX_PRICE_LABEL}}</span> </li>
+                                    </ul>
+
+                                    <!--<div class="row">-->
+                                    <!--<div class="col-md-4">-->
+                                    <!--<div>现金支付</div>-->
+                                    <!--<div>{{shopGood.CASH_PRICE_LABEL}}</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="col-md-4">-->
+                                    <!--<div>支付宝</div>-->
+                                    <!--<div>{{shopGood.ALI_PRICE_LABEL}}</div>-->
+                                    <!--</div>-->
+                                    <!--<div class="col-md-4">-->
+                                    <!--<div>微信支付</div>-->
+                                    <!--<div>{{shopGood.WX_PRICE_LABEL}}</div>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
+
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-xs btn-primary btn-circle" @click="modifyShopGoods(shopGood)">修改</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- END PAGE BASE CONTENT -->
+    <!-- END CONTENT BODY -->
+    </div>
+    <!-- BEGIN 添加商品 modal -->
+    <div class="modal fade bs-modal-lg modal-scroll" id="addGoodsId"
+         tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">添加商品</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="#" class="form-horizontal">
+                        <div class="form-body clearfix">
+                            <div class="form-group">
+                                <label class="col-md-3 control-label"><span class="required" aria-required="true">*</span>货位编号</label>
+                                <div class="col-md-4">
+                                    <input type="text" v-model="goodDetail.PLACE_NUM_" class="form-control" placeholder="货位编号">
+                                </div>
+                            </div>
+                            <!--<div class="form-group">-->
+                            <!--<label class="col-md-3 control-label">货位容量</label>-->
+                            <!--<div class="col-md-4">-->
+                            <!--<input type="text" v-model="goodDetail.MAX_COUNT_" class="form-control" placeholder="货位容量" >-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">商品</label>
+                                <div class="col-md-4">
+                                    <a class="btn btn-primary" href="#shopChooseGoods" data-toggle="modal">选择商品<i class="fa fa fa-plus"></i>
+                                    </a>
+                                    <a class="btn btn-primary" @click="cleanGood(goodDetail)">删除商品<i class="fa fa fa-times"></i>
+                                    </a>
+                                    <div class="goods_box goods_box_default">
+                                                <span class="goods_img_box"><img :src='goodDetail.PICTURE_'
+                                                                                 class="goods_img"></span>
+                                        <span class="goods_title">{{goodDetail.NAME_}}</span>
+                                        <span class="goods_id">{{goodDetail.CODE_}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-3 control-label">
+                                    售价<span class="required" aria-required="true">*</span>
+                                </label>
+                                <div class="col-md-4">
+                                    <div class="form-group clearfix">
+                                        <label class="col-md-6 control-label">现金支付(元)</label>
+                                        <div class="col-md-6">
+                                            <input type="text" v-model='goodDetail.CASH_PRICE_' class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group clearfix">
+                                        <label class="col-md-6 control-label">微信支付(元)</label>
+                                        <div class="col-md-6">
+                                            <input  type="text" v-model='goodDetail.WX_PRICE_' class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group clearfix">
+                                        <label class="col-md-6 control-label">支付宝(元)</label>
+                                        <div class="col-md-6">
+                                            <input type="text" v-model='goodDetail.ALI_PRICE_' class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" @click="submitAddGood(goodDetail)">提交
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END 添加商品 modal -->
+    <!-- BEGIN 编辑商品 modal -->
+    <div class="modal fade bs-modal-lg modal-scroll" tabindex="-1" role="dialog" aria-hidden="true" id="modifyGoodsId">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true"></button>
+                    <h4 class="modal-title">修改商品
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form action="#" class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group">
+                                <label class="col-md-3 control-label"><span class="required" aria-required="true">*</span>货位编号</label>
+                                <div class="col-md-4">
+                                    <input type="text" v-model="modifyGood.PLACE_NUM_" class="form-control" placeholder="货位编号">
+                                </div>
+                            </div>
+                            <!--<div class="form-group">-->
+                            <!--<label class="col-md-3 control-label">货位容量</label>-->
+                            <!--<div class="col-md-4">-->
+                            <!--<input type="text" v-model="modifyGood.MAX_COUNT_" class="form-control" placeholder="货位容量" >-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">商品</label>
+                                <div class="col-md-4">
+                                    <a class="btn btn-primary" href="#shopChooseGoods" data-toggle="modal"
+                                    >选择商品
+                                        <i class="fa fa fa-plus"></i>
+                                    </a>
+                                    <a class="btn btn-primary" @click="cleanGood(modifyGood)">删除商品
+                                        <i class="fa fa fa-times"></i>
+                                    </a>
+                                    <div class="goods_box goods_box_default">
+                                                <span class="goods_img_box"><img :src='modifyGood.PICTURE_'
+                                                                                 class="goods_img"></span>
+                                        <span class="goods_title">{{modifyGood.NAME_}}</span>
+                                        <span class="goods_id">{{modifyGood.CODE_}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">
+                                    售价<span class="required" aria-required="true">*</span>
+                                </label>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="col-md-6 control-label">现金支付(元)</label>
+                                        <div class="col-md-6">
+                                            <input  type="text" v-model='modifyGood.CASH_PRICE_' class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-6 control-label">微信支付(元)</label>
+                                        <div class="col-md-6">
+                                            <input  type="text" v-model='modifyGood.WX_PRICE_' class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-6 control-label">支付宝(元)</label>
+                                        <div class="col-md-6">
+                                            <input  type="text" v-model='modifyGood.ALI_PRICE_' class="form-control" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" @click="submitModifyShopGood(modifyGood)">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END 编辑商品 modal -->
+    <!-- BEGIN 选择商品 modal -->
+    <div class="modal fade bs-modal-lg modal-scroll" id="shopChooseGoods"
+         tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">选择商品</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="search-bar-accurate clearfix">
+                        <div class="form-group">
+                            <label class="control-label">商品名称</label>
+                            <input type="text" class="form-control input-medium" placeholder="输入商品名称" v-model="goodSearchParams.NAME_" @keyup.enter="searchGood">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">商品编号</label>
+                            <input type="text" class="form-control input-medium" placeholder="输入商品编号"  v-model="goodSearchParams.CODE_" @keyup="searchGood">
+                        </div>
+                        <div class="form-actions">
+                            <label class="control-label">
+                                <button @click="searchGood" type="submit" class="btn btn-primary">查询</button>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="table-scrollable table-scrollable-borderless scrollable-y">
+                        <table class="table table-hover table-light passageTable">
+                            <tbody>
+                            <tr v-for="good in choosegoodList">
+                                <td>
+                                    <dl class="goods-data">
+                                        <dt><img :src="good.PICTURE_" class="img_goods_sm"></dt>
+                                        <dd>
+                                            <div>{{good.NAME_}}</div>
+                                            <div class="font-grey-silver font-sm">{{good.CODE_}}</div>
+                                        </dd>
+                                    </dl>
+
+                                </td>
+                                </td>
+                                <td>
+                                    <a class="btn btn-primary btn-circle btn-xs" @click="shopGoodAdd(good,goodDetail,modifyGood)">添加</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END 选择商品 modal -->
+
+</section>
+
+<!-- END CONTENT -->

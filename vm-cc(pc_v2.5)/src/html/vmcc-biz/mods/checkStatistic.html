@@ -1,0 +1,132 @@
+<!-- BEGIN CONTENT -->
+<section class="page-content-wrapper hidden" id="section-checkStatistic" v-cloak>
+    <div class="page-head">
+        <div class="page-title">
+            <div class="caption">
+                <span>对账统计</span>
+            </div>
+        </div>
+        <div class="page-actions">
+            <button type="button" class="btn btn-primary">导出Excel</button>
+        </div>
+    </div>
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <!-- BEGIN PAGE BASE CONTENT -->
+        <div class="portlet light bordered vmui-portlet">
+            <!--<div class="portlet-title">-->
+                <!--<div class="caption">-->
+                    <!--<span class="caption-subject font-dark sbold uppercase">对账统计</span>-->
+                <!--</div>-->
+                <!--<div class="actions">-->
+                    <!--<button type="button" class="btn dark btn-circle" href="#">导出Excel</button>-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="portlet-body">
+                <div class="dateselect-module clearfix">
+                    <span class="time-lable">时间</span>
+                    <div class="btn-group btn-group-justified">
+                        <a href="javascript:;" class="btn btn-default" @click="todayStatistics">今日</a>
+                        <a href="javascript:;" class="btn btn-default" @click="yesterdayStatistics">昨日</a>
+                        <a href="javascript:;" class="btn btn-default" @click="weekStatistics">7日</a>
+                        <a href="javascript:;" class="btn btn-default" @click="twoWeekStatistics">14日</a>
+                        <a href="javascript:;" class="btn btn-default" @click="monthStatistics">30日</a>
+                    </div>
+                    <div class="td-date-container">
+                        <div class="input-group input-daterange">
+                            <input type="text" class="form-control form_datetime" id="checkStartTime">
+                            <span class="input-group-addon">至</span>
+                            <input  type="text" class="form-control form_datetime" id="checkEndTime">
+                        </div>
+                    </div>
+                </div>
+                <div class="search-bar-accurate clearfix">
+                    <!--<div class="form-group">-->
+                    <!--<label class="control-label">设备名称</label>-->
+                    <!--<input type="text" class="form-control input-medium" placeholder="search...">-->
+                    <!--</div>-->
+                    <div class="form-group">
+                        <label class="control-label">商户</label>
+                        <input type="text" class="form-control input-medium" placeholder="商户名称">
+                    </div>
+                    <div class="form-actions">
+                        <label class="control-label">
+                            <button type="submit" class="btn btn-primary">查询</button>
+                        </label>
+                    </div>
+                </div>
+                <div class="datasum-module clearfix">
+                    <ul>
+                        <li class="data-header">销售总金额</li>
+                        <li><span class="data-money font-green-sharp">126.85</span>元</li>
+                    </ul>
+                    <ul>
+                        <li class="data-header">订单总数</li>
+                        <li><span class="date-order">50</span>笔</li>
+                    </ul>
+                    <ul>
+                        <li class="data-header">平台服务费</li>
+                        <li><span class="data-money font-green-sharp">126.85</span>元</li>
+                    </ul>
+                    <ul>
+                        <li class="data-header">商户金额</li>
+                        <li><span class="data-money font-green-sharp">126.85</span>元</li>
+                    </ul>
+                </div>
+                <div class="table-scrollable table-scrollable-borderless">
+                    <table class="table table-light">
+                        <thead>
+                        <tr>
+                            <th>交易时间</th>
+                            <th>商户</th>
+                            <th>设备</th>
+                            <th>商品名称</th>
+                            <th>支付类型</th>
+                            <th>商户订单号</th>
+                            <th>商品价格</th>
+                            <th>平台服务费</th>
+                            <th>商户金额</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                2017-07-27 12:02
+                            </td>
+                            <td>杭州艾智物联网科技有限公司
+                            </td>
+                            <td>
+                                <div>设备名称<span class="font-grey-silver font-sm">（100000004）</span></div>
+                                <div>货道：11</div>
+                            </td>
+                            <td>
+                                脉动维生素功能饮料橘子味
+                            </td>
+                            <td>
+                                微信支付
+                            </td>
+                            <td>
+                                upayuc4rlxlh1i20170905104453
+                            </td>
+                            <td>
+                                ￥5.00
+                            </td>
+                            <td>
+                                ￥5.00
+                            </td>
+                            <td>
+                                ￥5.00
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <!-- END PAGE BASE CONTENT -->
+    </div>
+    <!-- END CONTENT BODY -->
+</section>
+
+<!-- END CONTENT -->

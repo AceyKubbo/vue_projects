@@ -1,0 +1,139 @@
+<!-- BEGIN CONTENT -->
+<section class="page-content-wrapper hidden" id="section-operationRecord" v-cloak>
+    <div class="page-head">
+        <div class="page-title">
+            <div class="caption">
+                <span>补换货记录</span>
+            </div>
+        </div>
+    </div>
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <!-- BEGIN PAGE BASE CONTENT -->
+        <div class="portlet light bordered vmui-portlet">
+            <div class="portlet-body">
+                <div class="tabbable-line">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a data-toggle="tab" @click="change('')">全部</a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" @click="change('_supply@like')">补货</a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" @click="change('exchange')">换货</a>
+                        </li>
+                    </ul>
+                    <!--搜索-->
+                    <div class="search-bar-accurate clearfix">
+                        <!--<div class="form-group">-->
+                        <!--<label class="control-label">设备名称</label>-->
+                        <!--<input type="text" class="form-control input-medium" placeholder="search...">-->
+                        <!--</div>-->
+                        <div class="form-group">
+                            <label class="control-label">商品编号</label>
+                            <input v-model="params.goodsCode" type="text" @keyup.enter="searchDevice" class="form-control input-medium" placeholder="输入商品编号">
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">设备编号</label>
+                            <input v-model="params.deviceSn" type="text" @keyup.enter="searchDevice" class="form-control input-medium" placeholder="输入设备编号">
+                        </div>
+                        <div class="form-actions">
+                            <label class="control-label">
+                                <button type="submit" class="btn btn-primary" @click="searchDevice">查询</button>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane active">
+                            <div class="table-scrollable table-scrollable-borderless table-hasPadding2">
+                                <table class="table table-hover table-light goodsTable" >
+                                    <thead>
+                                    <tr>
+                                        <th>操作</th>
+                                        <th>操作时间</th>
+                                        <th>操作员</th>
+                                        <th>设备</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody  >
+                                    <template  v-for="opera in operationList">
+                                        <tr   @click="showOperDetial(opera)">
+                                            <td>
+                                                <div class="font-blue" v-if="opera.operator=='exchange'">
+                                                    换货
+                                                </div>
+                                                <div class="font-red" v-else>
+                                                    补货
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {{opera.operTime}}
+                                            </td>
+                                            <td>
+                                                {{opera.userId}}
+                                            </td>
+                                            <td>
+                                                <div>{{opera.deviceSn}}</div>
+                                                <div>{{opera.counterName}}</div>
+                                            </td>
+                                        </tr>
+                                        <tr class="hideCell hidden" :id="'detail_'+opera.id">
+                                            <td colspan="6" class="hideCell-row">
+                                                <table class="table table-light table-hover table-child" >
+                                                    <tbody>
+                                                    <tr v-for="detail in opera.details">
+                                                        <td v-if = "opera.deviceType != 'shelf'">货道：{{detail.placeNum}}号</td>
+                                                        <td>
+                                                            <dl class="goods-data">
+                                                                <dt><img :src="detail.picture"
+                                                                         class="img_goods_sm"></dt>
+                                                                <dd>
+                                                                    <div>{{detail.goodsCode}}</div>
+                                                                    <div class="font-grey-silver font-sm">
+                                                                        {{detail.goodsName}}
+                                                                    </div>
+                                                                </dd>
+                                                            </dl>
+                                                        </td>
+                                                        <td>数量：{{detail.count}}</td>
+                                                        <td>
+                                                            <span class="status-success" v-if="detail.result==1" >初始化</span>
+                                                            <span class="status-fail" v-else>成功</span>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    </tbody>
+                                </table>
+                                <!--<div class="more-wrapper text-center">-->
+                                <!--<div class="data-null" v-if="RecordCount == TotalCount" >-->
+                                <!--<p class="text-center">无更多数据</p>-->
+                                <!--</div>-->
+                                <!--<div class="loading_more" v-else>-->
+                                <!--<button type="button" class="btn default btn-outline" @click="loadMore()">-->
+                                <!--加载更多-->
+                                <!--</button>-->
+                                <!--</div>-->
+                                <!--<div class="number_datas">已显示 <b>{{RecordCount}}</b> 条/共-->
+                                <!--<b>{{TotalCount}}</b> 条-->
+                                <!--</div>-->
+                                <!--</div>-->
+                            </div>
+                            <page ref="pageInit" :page="pageConfig" @loader="pageLoader()"></page>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <!-- END PAGE BASE CONTENT -->
+    </div>
+    <!-- END CONTENT BODY -->
+</section>
+
+<!-- END CONTENT -->

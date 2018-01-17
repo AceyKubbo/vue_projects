@@ -1,0 +1,59 @@
+<section id="section-stockOrder" class="hidden" v-cloak>
+    <div class="page-head bg-gradient">
+        <a @click="returnHome" class="back"><span class="ico ico-back"></span></a>
+        <div class="title">出入库管理</div>
+        <div class="page-head-right">
+            <button type="button" class="btn-head" @click="addStockOrder">添加出库单</button>
+        </div>
+    </div>
+    <div class="page-content">
+        <div class="weui-tab head-tab ">
+            <div class="weui-navbar">
+                <a name="replenishGoods" class="weui-navbar__item weui-bar__item--on" @click="stockInTab">
+                    <span>入库记录</span>
+                </a>
+                <a name="changeGoods" class="weui-navbar__item" @click="stockOutTab">
+                    <span>出库记录</span>
+                </a>
+            </div>
+            <div class="weui-tab__bd">
+                <div class="weui-tab__bd-item weui-tab__bd-item--active">
+                    <div v-if="stockOrderList" class="order-cells">
+                        <div class="order-cell" v-for="order in stockOrderList">
+                            <div class="order-cell-head">
+                                <div class="weui-cells mt-0">
+                                    <a class="weui-cell weui-cell_access" @click="loadStockOrderDetails(order)">
+                                        <div class="weui-cell__bd">
+                                            <div class="font-md">{{order.remark}}</div>
+                                            <div class="font-sm font-grayer">{{order.stock_time}}</div>
+                                        </div>
+                                        <div class="weui-cell__ft">
+                                            <div class="font-md font-blue">{{order.type_label}}</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div :id="'detail-'+order.id" class="order-cell-content hidden">
+                                <div class="weui-cells mt-0">
+                                    <div class="weui-cell" v-for="detail in order.details">
+                                        <div class="weui-cell__bd">
+                                            <!--<div class="">商品名称</div>-->
+                                            <div class="font-sm font-bold">{{detail.itemCode}}</div>
+                                        </div>
+                                        <div class="weui-cell__ft">
+                                            <div class="font-sm font-bold font-black">×<span>{{detail.requestCount}}</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else class="weui-loadmore" >
+                        <i class="weui-loading"></i>
+                        <span class="weui-loadmore__tips">正在加载</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

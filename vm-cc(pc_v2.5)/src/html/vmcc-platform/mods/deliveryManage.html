@@ -1,0 +1,225 @@
+<!-- BEGIN CONTENT -->
+<section class="page-content-wrapper hidden" id="section-deliveryManage">
+    <div class="page-head">
+        <div class="page-title">
+            <div class="caption">
+                <span>送货管理</span>
+            </div>
+        </div>
+        <div class="page-actions">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#deliveryId" @click="addDelivery">创建送货单</button>
+        </div>
+    </div>
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <!-- BEGIN PAGE BASE CONTENT -->
+        <div class="portlet light bordered vmui-portlet">
+            <div class="portlet-body">
+                <div class="search-bar-quick clearfix">
+                    <div class="form-group">
+                        <label class="control-label">时间</label>
+                        <div class="td-date-container">
+                            <div class="input-group input-daterange">
+                                <picker ref="start_time" :date="params.start_time" @refresh="pageLoader"></picker>
+                                <span class="input-group-addon">至</span>
+                                <picker ref="end_time" :date="params.end_time" @refresh="pageLoader"></picker>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">门店</label>
+                        <input type="text" class="form-control input-medium" placeholder="按门店名称搜索" v-model="params.STORE_NAME_" @keyup.enter="searchDelivery">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">配送方式</label>
+                        <select class="form-control input-small" v-model="DELIVERY_STATUS_"
+                                @change="searchDelivery">
+                            <option value="">全部</option>
+                            <option value="1|2">待配送</option>
+                            <option value="3">配送中</option>
+                            <option value="4">已配送</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <label class="control-label">
+                            <button type="submit" class="btn btn-primary" @click="searchDelivery">查询</button>
+                        </label>
+                    </div>
+                </div>
+                <div class="table-scrollable table-scrollable-borderless table-hasPadding2">
+                    <table class="table table-light table-hover">
+                        <thead>
+                        <tr>
+                            <th>商户</th>
+                            <th>门店</th>
+                            <th>送货人</th>
+                            <th>送货状态</th>
+                            <th>送货时间</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <template v-for="delivery in deliveryList">
+                            <tr @click="showDetail(delivery)">
+                                <td>{{delivery.tenantName}}</td>
+                                <td>{{delivery.storeName}}</td>
+                                <td>{{delivery.deliveryInfo}}</td>
+                                <td>{{delivery.stauts_label}}</td>
+                                <td>{{delivery.requestTime}}</td>
+                            </tr>
+                            <tr class="hideCell hidden" :id="delivery.id">
+                                <td colspan="5" class="hideCell-row">
+                                    <table class="table table-light table-child">
+                                        <tbody>
+                                        <tr v-for="detail in delivery.DeliveryNoteDetail">
+                                            <td>
+                                                <div>{{detail.goodsName}}</div>
+                                                <div class="font-grey-silver font-sm">{{detail.goodsCode}}</div>
+                                            </td>
+                                            <td>数量：{{detail.goodsCount}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </template>
+                        </tbody>
+                    </table>
+                </div>
+                <page ref="pageInit" :page="pageConfig" @loader="pageLoader()"></page>
+            </div>
+        </div>
+        <!-- END PAGE BASE CONTENT -->
+    </div>
+    <!-- END CONTENT BODY -->
+    <!-- END CONTENT -->
+
+    <!-- BEGIN 创建送货单 -->
+    <div class="modal fade bs-modal-lg" tabindex="-1" role="dialog" aria-hidden="true" id="deliveryId">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">创建送货单</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-3">送货人</label>
+                            <div class="col-md-4">
+                                <input class="form-control" type="text" list="deliveryManDataList" v-model="deliveryDetail.DELIVERY_MAN_LABEL" @change="selectDeliveryMan">
+                                <datalist id="deliveryManDataList">
+                                    <option v-for="op in deliveryMans" :value="op.REMARK_"></option>
+                                </datalist>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-3">仓库</label>
+                            <div class="col-md-4">
+                                <input class="form-control" type="text" list="deliveryStockDataList" v-model="deliveryDetail.STOCK_NAME_LABEL" @change="selectStock">
+                                <datalist id="deliveryStockDataList">
+                                    <option v-for="op in stocks" :value="op.code">{{op.name}}</option>
+                                </datalist>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-3">商户</label>
+                            <div class="col-md-4">
+                                <input type="text" list="deliveryTenantDataList" class="form-control" v-model="deliveryDetail.TENANT_ID_LABEL" @change="selectTenant">
+                                <datalist id="deliveryTenantDataList">
+                                    <option v-for="op in tenantList" :value="op.ID_">{{op.TENANT_NAME_}}</option>
+                                </datalist>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-3">门店</label>
+                            <div class="col-md-4">
+                                <input type="text" value="" list="deliveryStoreDataList" class="form-control" @change="selectStore" v-model="deliveryDetail.STORE_NAME_LABEL">
+                                <datalist id="deliveryStoreDataList">
+                                    <option v-for="op in storeList" :value="op.NAME_">{{op.NAME_}}</option>
+                                </datalist>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-3">送货说明</label>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" placeholder="请输入采购说明" v-model="deliveryDetail.REMARK_">
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="control-label col-md-3">送货商品</label>
+                            <div class="col-md-6">
+                                <a data-toggle="modal" class="btn btn-primary" data-target="#deliverySelectGoods" @click="openGoodList">选择商品<i class="fa fa fa-plus"></i></a>
+                                <div class="goods_box-editable clearfix" v-for="detail in deliveryDetail.details">
+                                    <dl class="goods-data pull-left">
+                                        <dt><img :src="detail.PICTURE_" class="img_goods_sm"></dt>
+                                        <dd>
+                                            <div>商品名称:{{detail.NAME_}}</div>
+                                            <div class="font-grey-silver font-sm">商品编号:{{detail.CODE_}}</div>
+                                        </dd>
+                                    </dl>
+                                    <div class="pull-right">
+                                        <label class="control-label">数量：</label> <input type="text" class="form-control input-xsmall" v-model="detail.requestCount">
+                                    </div>
+                                    <div class="floatDelete"  @click="delDetailsItem(detail)"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" @click="submitDelivery(deliveryDetail)">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--END 创建送货单 -->
+
+    <!-- BEGIN 选择商品 modal -->
+    <div class="modal fade bs-modal-lg" id="deliverySelectGoods" tabindex="-1" role="dialog" aria-hidden="true" >
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-hidden="true"></button>
+                    <h4 class="modal-title">添加商品</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="search-bar-accurate clearfix" >
+                        <div class="form-group">
+                            <label class="control-label">商品</label>
+                            <input type="text" class="form-control input-medium" placeholder="输入商品名称或者商品编号" v-model="params.good_condi" @keyup="searchGoodList">
+                        </div>
+                    </div>
+                    <div class="table-scrollable table-scrollable-borderless scrollable-y">
+                        <table class="table table-hover table-light passageTable">
+                            <tbody>
+                            <tr v-for="good in goodList">
+                                <td>
+                                    <dl class="goods-data">
+                                        <dt><img :src="good.PICTURE_" class="img_goods_sm"></dt>
+                                        <dd><div>{{good.NAME_}}</div><div class="font-grey-silver font-sm">{{good.CODE_}}</div></dd>
+                                    </dl>
+                                </td>
+                                <td>
+                                    <label class="mt-checkbox mt-checkbox-outline">
+                                        <input type="checkbox" :value="good" v-model="checkboxGoodList"/>
+                                        <span></span>
+                                    </label>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn grey-salsa btn-outline" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" @click="submitDeliveryGoodList">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END 选择商品 modal -->
+</section>
+
+

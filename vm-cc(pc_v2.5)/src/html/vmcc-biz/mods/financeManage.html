@@ -1,0 +1,121 @@
+<!-- BEGIN CONTENT -->
+<section class="page-content-wrapper hidden">
+    <div class="page-head">
+        <div class="page-title">
+            <div class="caption">
+                <span>资金明细</span>
+            </div>
+        </div>
+        <!--<div class="page-actions">-->
+        <!--<button type="button" class="btn dark">导出excel</button>-->
+        <!--</div>-->
+    </div>
+    <!-- BEGIN CONTENT BODY -->
+    <div class="page-content">
+        <!-- BEGIN PAGE BASE CONTENT -->
+        <div class="portlet light bordered vmui-portlet">
+            <div class="portlet-body">
+                <div class="note note-info">
+                    <h4 class="block"> 账户余额：<span class="bold font-blue">￥100,000.00</span></h4>
+                </div>
+
+                <!-- 搜索 -->
+                <div class="dateselect-module clearfix">
+                    <span class="time-lable">时间</span>
+                    <div class="btn-group btn-group-justified">
+                        <a href="javascript:;" class="btn btn-default" @click="todayStatistics">今日</a>
+                        <a href="javascript:;" class="btn btn-default" @click="yesterdayStatistics">昨日</a>
+                        <a href="javascript:;" class="btn btn-default" @click="weekStatistics">7日</a>
+                        <a href="javascript:;" class="btn btn-default" @click="twoWeekStatistics">14日</a>
+                        <a href="javascript:;" class="btn btn-default" @click="monthStatistics">30日</a>
+                    </div>
+                    <div class="td-date-container">
+                        <div class="input-group input-daterange">
+                            <input type="text" class="form-control form_datetime" name="from">
+                            <span class="input-group-addon">至</span>
+                            <input type="text" class="form-control form_datetime" name="to">
+                        </div>
+                    </div>
+                </div>
+                <div class="search-bar-quick clearfix" id="SalesRecordSearchForm">
+                    <div class="form-group">
+                        <label class="control-label">类型</label>
+                        <select class="form-control input-small" v-model="channel"
+                                @change="doSearch">
+                            <option value="">全部</option>
+                            <option>销售收入</option>
+                            <option>销售退款</option>
+                            <option>转账</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">金额</label>
+                        <input v-model="goodsName" type="text" class="form-control input-medium"
+                               placeholder="请输入资金金额搜索 " @keyup.enter="searchGood">
+                    </div>
+                    <div class="form-actions">
+                        <label class="control-label">
+                            <button type="submit" @click="doSearch" class="btn btn-primary">查询</button>
+                        </label>
+                    </div>
+                </div>
+                <!-- 销售列表 -->
+                <div class="table-scrollable table-scrollable-borderless">
+                    <table class="table table-hover table-light">
+                        <thead>
+                        <tr>
+                            <th width="30%">时间</th>
+                            <th width="10%">类型</th>
+                            <th width="10%">收入金额（元）</th>
+                            <th width="10%">支出金额（元）</th>
+                            <th width="15%">余额（元）</th>
+                            <th width="25">备注</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>2017-11-26 15:59:58</td>
+                            <td>销售收入</td>
+                            <td>￥1.00</td>
+                            <td></td>
+                            <td>￥1150.50</td>
+                            <td>销售收入10元*10%</td>
+                        </tr>
+                        <tr>
+                            <td>2017-11-26 15:59:58</td>
+                            <td>销售退款</td>
+                            <td></td>
+                            <td>￥1</td>
+                            <td>￥1150.50</td>
+                            <td>销售退款10元*10%</td>
+                        </tr>
+                        <template v-else>
+                            <div class="loading-custom">
+                                <img src="img/global/loading.gif" class="img-loading">
+                            </div>
+                        </template>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <th width="30%">合计：</th>
+                            <th width="10%"></th>
+                            <th width="10%">￥1.00</th>
+                            <th width="10%">￥1</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </tfoot>
+                    </table>
+                    <!--<div class="more-wrapper text-center">-->
+                    <!--<div class="number_datas">-->
+                    <!--已显示 <b>{{RecordCount}}</b> 条/共<b>{{TotalCount}}</b> 条-->
+                    <!--</div>-->
+                    <!--</div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END PAGE BASE CONTENT -->
+    <!-- END CONTENT BODY -->
+</section>
+<!-- END CONTENT -->

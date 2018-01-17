@@ -1,0 +1,24 @@
+<section  id="section-shortage-count" class="hidden" v-cloak>
+    <div class="page-head bg-gradient">
+        <a @click="back" class="back"><span class="ico ico-back"></span></a>
+        <div class="title">缺货统计</div>
+    </div>
+    <div class="page-content">
+        <div class="weui-cells vmcc-cells mt-0">
+            <a class="weui-cell weui-cell_access" href="javascript:;" v-for="good in goodCountList" @click="openShortageDetail(good)">
+                <div class="weui-cell__hd">
+                    <div class="goods-img-box">
+                        <img :src="good.PICTURE_" class="goods-img">
+                    </div>
+                </div>
+                <div class="weui-cell__bd">
+                    <div><span class="font-md font-bold">{{good.NAME_}}</span>
+                        <span class="font-xs font-grayer">{{good.CODE_}}</span>
+                    </div>
+                    <div class="font-sm font-gray">缺货量：<span class="font-bold font-black font-lg">{{good.SHORT_COUNT_}}</span></div>
+                </div>
+                <div class="weui-cell__ft"></div>
+            </a>
+        </div>
+    </div>
+</section>

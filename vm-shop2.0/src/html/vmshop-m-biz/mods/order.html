@@ -1,0 +1,85 @@
+<section id="section-orderpage" class="hidden">
+    <div class="page-header main-gradient">
+        <a class="header-actions header-actions-left" @click="returnPersonalCenter"><span class="ico ico-back"></span></a>
+        <div class="title">我的订单</div>
+    </div>
+    <div class="page-content order-content">
+        <div class="order-cells">
+            <div class="order-cell" v-for="order in orderList">
+                <div class="order-cell-head">
+                    <span class="title">{{order.ORDER_SUBJECT_}}</span>
+                    <!--<span class="numder">{{order.COUNTER_NAME_}}</span>-->
+                    <div class="order-cell-head-right">
+                        <span class="payment-status" v-if="order.PAY_STATUS_ == '3'">有退款</span>
+                        <span class="payment-status" v-if="order.PAY_STATUS_ == '2'">已支付</span>
+                        <span class="payment-status" v-if="order.PAY_STATUS_ == '1'">未支付</span>
+                        <span class="switch" @click="showOrderDetail(order)">
+                            <i class="ico ico-turn-down"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="goods_purchased" hidden>
+                    <div class="weui-cells goods-cells_order">
+                        <div class="weui-cell" v-for="orderDetail in orderDetails">
+                            <div class="weui-cell__hd">
+                                <div class="goods-img-box"><img :src="orderDetail.PICTURE_" alt="" class="goods-img"></div>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <div class="clearfix">
+                                    <div class="fl">
+                                        <div class="product-title">{{orderDetail.GOODS_NAME_}}</div>
+                                        <div class="product-label default" v-if="orderDetail.DELIVERY_TYPE_ == '1'">
+                                            魔格自取
+                                        </div>
+                                        <div class="product-label warning" v-if="orderDetail.DELIVERY_TYPE_ == '2'">
+                                            前台送货
+                                        </div>
+                                    </div>
+                                    <div class="fr">
+                                        <div class="product-price">¥<span>{{orderDetail.GOODS_PRICE_UNIT}}</span></div>
+                                        <div class="calculate">
+                                            ×{{orderDetail.COUNT_}}
+                                            <!--=¥{{orderDetail.GOODS_PRICE_LABEL}}-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix">
+                                    <div class="grid-number fl" v-if="orderDetail.COUNTER_DEVICE_TYPE_ == 'grid'|| orderDetail.COUNTER_DEVICE_TYPE_ == 'agrid'">
+                                        货道号：{{orderDetail.GOODS_PLACE_NUM_}}
+                                    </div>
+                                    <div class="goods-status fr" v-if="orderDetail.DELIVERY_TYPE_ == '1'">
+                                        <span v-if="orderDetail.PICKUP_STATUS_ == '3'">出货成功</span>
+                                        <span v-if="orderDetail.PICKUP_STATUS_ == '4'">异常恢复</span>
+                                        <span v-if="orderDetail.PICKUP_STATUS_ == '1'">出货中</span>
+                                        <span v-if="orderDetail.PICKUP_STATUS_ == '2'">出货中</span>
+                                        <span v-if="orderDetail.REFUND_STATUS_ == '2'">已退款</span>
+                                    </div>
+                                    <div class="goods-status fr" v-if="orderDetail.DELIVERY_TYPE_ == '2'">
+                                        <span v-if="orderDetail.DELIVERY_STATUS_ == '4'">已配送</span>
+                                        <span v-if="orderDetail.DELIVERY_STATUS_ == '3'">配送中</span>
+                                        <span v-if="orderDetail.DELIVERY_STATUS_ == '1'">待配送</span>
+                                        <span v-if="orderDetail.DELIVERY_STATUS_ == '2'">待配送</span>
+                                        <span v-if="orderDetail.REFUND_STATUS_ == '2'">已退款</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-cell-foot clearfix">
+                    <span class="time">{{order.CREATE_TIME_}}</span>
+                    <span class="count"> 合计：¥<span class="numder">{{order.PAY_AMOUNT_}}</span></span>
+                </div>
+                <div class="order-cell-foot clearfix" v-if="order.PAY_STATUS_ == '1'">
+                    <div class="order-actions" @click="toPay(order)">
+                        <button type="button" class="btn">去支付</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="vmshop-nodata hidden" id="noOrder">
+        <div class="vmshop-nodata-img"><img src="img/nodata.png"></div>
+        <p>您已成为魔格会员，赶紧选购吧！</p>
+    </div>
+</section>

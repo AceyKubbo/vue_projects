@@ -1,0 +1,88 @@
+<section id="section-deviceItem" class="hidden" v-cloak>
+    <div class="page-head bg-gradient">
+        <a @click="returnHome" class="back"><span class="ico ico-back"></span></a>
+        <div class="title">设备[{{deviceInfo.mid}}]详情</div>
+        <div class="page-head-right">
+            <button v-if="deviceInfo.DEVICE_TYPE_=='grid'||deviceInfo.DEVICE_TYPE_=='agrid'" type="button" class="btn-head" @click="openAllPassways">一键补货</button>
+        </div>
+    </div>
+    <div class="page-content">
+        <!-- BEGIN 格子柜页面 -->
+        <div v-if="deviceInfo.DEVICE_TYPE_=='grid'||deviceInfo.DEVICE_TYPE_=='agrid'">
+            <div class="weui-tab head-tab">
+                <div class="weui-navbar">
+                    <a id="allPassway" class="weui-navbar__item" @click="allPassway">
+                        <span>全部</span>
+                    </a>
+                    <a id="fullPassway" class="weui-navbar__item" @click="fullPassway">
+                        <span>满货</span>
+                    </a>
+                    <a id="shortPassway" class="weui-navbar__item weui-bar__item--on" @click="shortPassway">
+                        <span>缺货</span>
+                    </a>
+                </div>
+                <div class="weui-tab__bd">
+                    <div class="weui-tab__bd-item weui-tab__bd-item--active">
+                        <div class="columns clearfix">
+                            <div v-if="deviceItems.length==0">
+                                <div class="nodata">
+                                    <div class="nodata-img"><img src="img/cc-m-biz/no.png"></div>
+                                    <div class="font-lg font-gray">无补货商品</div>
+                                </div>
+                            </div>
+                            <div v-else v-for="item in deviceItems" :class="item.count>=item.max_count?'column':'column OOS'" @click="openPassway(item)">
+                                <div class="column-child">
+                                    <div class="title1">{{item.NAME_}}</div>
+                                    <div class="number1">{{item.CODE_}}</div>
+                                    <div class="img-goods">
+                                        <img :src="item.PICTURE_">
+                                    </div>
+                                    <div class="number-grid">{{item.PLACE_NUM_}}</div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END 格子柜页面 -->
+        <!-- BEGIN 综合机/无人货架页面-->
+        <div v-if="deviceInfo.DEVICE_TYPE_=='box'||deviceInfo.DEVICE_TYPE_=='shelf'">
+            <div class="weui-cells vmcc-cells weui-cells_checkbox mt-0">
+                <div class="weui-cell " v-for="item in deviceItems">
+                    <div class="weui-cell__hd">
+                        <div class="goods-img-box">
+                            <img :src="item.PICTURE_" class="goods-img">
+                            <div class="goods-img-float">
+                                货道：
+                                <span v-if="deviceInfo.DEVICE_TYPE_=='shelf'">{{item.FLOOR_NUM_}}</span>
+                                <span v-else>{{item.PLACE_NUM_}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <div class="font-md font-black font-bold">{{item.NAME_}}</div>
+                        <div class="font-sm font-grayer">{{item.CODE_}}</div>
+                        <div class="font-sm font-gray">
+                            当前量：<span class="font-black font-bold font-lg">{{item.count}}</span>
+                            预警量：<span class="font-red font-bold font-lg">{{item.WARNING_COUNT_}}</span>
+                        </div>
+                    </div>
+                    <div class="weui-cell__ft">
+                        <div class="weui-count">
+                            <a class="weui-count__btn weui-count__decrease" @click="decCount(item)"></a>
+                            <input class="weui-count__number" type="number" v-model="item.SHORT_COUNT_" placeholder="0">
+                            <a class="weui-count__btn weui-count__increase" @click="addCount(item)"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-fixed-block clearfix">
+                <span class="btn-group"><button class="btn-flat-grey" type="button" @click="returnHome">取消</button></span>
+                <span class="btn-group"><button class="btn-flat-blue" type="button" @click="submitActions">确定</button></span>
+            </div>
+        </div>
+        <!-- END 综合机/无人货架页面-->
+    </div>
+</section>

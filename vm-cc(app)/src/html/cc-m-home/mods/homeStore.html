@@ -1,0 +1,28 @@
+<section id="section-store" class="hidden" v-cloak>
+    <div class="page-header bg-gradient">
+        <div class="logo"><img src="img/cc-m-biz/moge-logo.png" class="logo-img"></div>
+        <div class="page-head-right" @click="toSelectTenant">企业切换</div>
+    </div>
+    <div class="page-content">
+        <div v-if="storeList&&storeList.length>0" class="cc-m-cells">
+            <div v-for="store in storeList" class="cc-m-cell" @click="toMenu(store)">
+                <div class="cc-m-cell-title">{{store.NAME_}}</div>
+                <ul class="cc-m-cell-text">
+                    <li>门店地址：{{store.ADDRESS_}}</li>
+                    <!--<li>状态：{{store.STATUS_}}</li>-->
+                    <li>负责人：{{store.CONTACT_}}</li>
+                    <li>负责人电话：{{store.PHONE_}}</li>
+                </ul>
+            </div>
+        </div>
+        <div v-else-if="storeList&&storeList.length==0" class="noDatas">
+            <img src="img/cc-m-biz/no.png">
+            <p class="h1">暂未添加门店！</p>
+            <p class="h2">请联系魔格客服，电话18072782756</p>
+        </div>
+        <div v-else class="weui-loadmore">
+            <i class="weui-loading"></i>
+            <span class="weui-loadmore__tips">正在加载</span>
+        </div>
+    </div>
+</section>
